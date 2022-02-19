@@ -1,20 +1,27 @@
-import { Column, Entity, PrimaryColumn } from 'typeorm';
-
-export type Role = 'user' | 'staff' | 'admin';
-
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import { Role } from './Role';
+import { Unit } from './Unit';
 @Entity('User')
 export class User {
   @PrimaryColumn()
-  id?: string;
+  id: string;
 
   @Column()
-  firstName?: string;
+  firstName: string;
 
   @Column()
-  lastName?: string;
+  lastName: string;
 
   @Column()
-  role?: Role = 'user';
+  phoneNumber: string;
+
+  @ManyToOne((type) => Unit, (unit) => unit.id)
+  @JoinColumn({ name: 'team_id', referencedColumnName: 'id' })
+  team: Unit;
+
+  @ManyToOne((type) => Role, (role) => role.id)
+  @JoinColumn({ name: 'role_id', referencedColumnName: 'id' })
+  role?: Role;
 
   public constructor(data?: User) {
     if (data) {
