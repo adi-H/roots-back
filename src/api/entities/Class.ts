@@ -7,6 +7,7 @@ import {
 } from 'typeorm';
 import { Building } from './Building';
 import { Unit } from './Unit';
+import { User } from './User';
 
 @Entity('Class')
 export class Class {
@@ -23,6 +24,10 @@ export class Class {
   @ManyToOne((type) => Unit, (unit) => unit.id)
   @JoinColumn({ name: 'owner_unit_id', referencedColumnName: 'id' })
   owner: Unit;
+
+  @ManyToOne((type) => User, (user) => user.id)
+  @JoinColumn({ name: 'keyholder_user_id', referencedColumnName: 'id'})
+  keyholder: User;
 
   public constructor(data?: Class) {
     if (data) {
