@@ -28,7 +28,7 @@ route.get('/', (req, res) => {
  *  classId - the id of the class the user is signing for
  */
 route.post('/sign', (req, res) => {
-    const userId = req.body.userId;
+    const userId = req.body.userId; // TODO: Get userId in secure way
     const classId = req.body.classId;
     console.log(`The user ${userId} is signing for the class ${classId}`)
 
