@@ -5,13 +5,16 @@ export type Role = 'user' | 'staff' | 'admin';
 @Entity('User')
 export class User {
   @PrimaryColumn()
-  id?: string;
+  id: string;
 
   @Column()
-  firstName?: string;
+  password: string;
 
   @Column()
-  lastName?: string;
+  firstName: string;
+
+  @Column()
+  lastName: string;
 
   @Column()
   role?: Role = 'user';
