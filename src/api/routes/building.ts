@@ -10,8 +10,8 @@ const route = Router();
  */
 route.get('/', (req, res) => {
     console.log('Getting all buildings')
-    const connection = getConnection();
-    connection.query('select * from "Building"')
+    const dbConnection = getConnection();
+    dbConnection.getRepository("Building").find()
     .then(buildings => {
         res.json(buildings)
     })

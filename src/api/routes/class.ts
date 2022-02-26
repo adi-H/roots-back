@@ -10,8 +10,8 @@ const route = Router();
  */
 route.get('/', (req, res) => {
     console.log('Getting all classes')
-    const connection = getConnection();
-    connection.query('select * from "Class"')
+    const dbConnection = getConnection();
+    dbConnection.getRepository("Class").find()
     .then(classes => {
         res.json(classes)
     })
@@ -28,43 +28,13 @@ route.get('/', (req, res) => {
  *  classId - the id of the class the user is signing for
  */
 route.post('/sign', (req, res) => {
-    const userId = req.body.userId; // TODO: Get userId in secure way
+    const userId = req.body.userId; // TODO: Get userId in a secure way
     const classId = req.body.classId;
     console.log(`The user ${userId} is signing for the class ${classId}`)
 
-    const connection = getConnection();
-    connection.createQueryBuilder()
-    .update('Class')
-    .set({keyholder: userId})
-    .where('id = :classId', {classId: classId})
-    .execute()
-    .then(result => {
-        console.log(result)
-        res.status(200).end()
-    })
-    .catch(err => {
-        console.error(err.stack)
-        res.status(500).end();
-    })
-})
-
-/**
- * A user is signing for a class
- * Body:
- *  userId - the signing user's id
- *  classId - the id of the class the user is signing for
- */
- route.post('/sign', (req, res) => {
-    const userId = req.body.userId;
-    const classId = req.body.classId;
-    console.log(`The user ${userId} is signing for the class ${classId}`)
-
-    const connection = getConnection();
-    connection.createQueryBuilder()
-    .update('Class')
-    .set({keyholder: userId})
-    .where('id = :classId', {classId: classId})
-    .execute()
+    const dbConnection = getConnection();
+    dbConnection.getRepository('Class')
+    .update({id: classId}, {keyholder: userId})
     .then(result => {
         console.log(result)
         res.status(200).end()
