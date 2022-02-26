@@ -1,5 +1,5 @@
 import jwt from 'express-jwt';
-import { User } from '../api/entities/User';
+import { User } from '../src/api/entities/User';
 
 declare global {
   namespace Express {

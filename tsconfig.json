@@ -1,8 +1,10 @@
 {
+  "ts-node": { "files": true },
+  "files": ["types/index.d.ts"],
   "compilerOptions": {
     "target": "es6",
     "lib": ["es6", "dom", "es2017", "esnext.asynciterable"],
-    "typeRoots": ["./src/types", "./node_modules/@types"],
+    "typeRoots": ["./node_modules/@types", "./types"],
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
