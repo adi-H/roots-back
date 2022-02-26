@@ -11,7 +11,7 @@ const route = Router();
 route.get('/', (req, res) => {
     console.log('Getting all classes')
     const dbConnection = getConnection();
-    dbConnection.getRepository("Class").find()
+    dbConnection.getRepository("Class").find({relations: ["keyholder", "owner", "building"]})
     .then(classes => {
         res.json(classes)
     })
