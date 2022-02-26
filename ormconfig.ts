@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const config = require('./dist/config').default;
+import config from './src/config';
+const SnakeNamingStrategy = require('typeorm-naming-strategies')
+  .SnakeNamingStrategy;
 
-const distConfig = {
+const ORMconfig = {
   type: 'postgres',
   host: config.databaseURL,
   port: 5432,
@@ -10,10 +12,11 @@ const distConfig = {
   database: 'roots',
   synchronize: true,
   logging: false,
-  entities: ['dist/api/entities/**/*.js'],
+  entities: ['dist/api/entities/**/*.js', 'src/api/entities/**/*.ts'],
   cli: {
     entitiesDir: 'dist/api/entities',
   },
+  namingStrategy: new SnakeNamingStrategy(),
 };
 
-module.exports = distConfig;
+export = ORMconfig;

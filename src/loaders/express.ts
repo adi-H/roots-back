@@ -8,6 +8,8 @@ import apiRoutes from '../api/routes';
 import config from '../config';
 import { ErrorHandler, handleError } from '../helpers/ErrorHandler';
 import Logger from '../logger';
+import cookieParser from 'cookie-parser';
+import { isUserAuthenticated } from '../api/middlewares/middlewares';
 
 export default (app: Application): void => {
   // Health Check endpoints
@@ -27,6 +29,10 @@ export default (app: Application): void => {
 
   // Middleware that transforms the raw string of req.body into json
   app.use(bodyParser.json());
+
+  app.use(cookieParser());
+
+  app.use(isUserAuthenticated);
 
   // Load API routes
   app.use(`/${config.endpointPrefix}`, apiRoutes);

@@ -2,6 +2,10 @@ import 'reflect-metadata';
 import express from 'express';
 import Logger from './logger';
 
+process.on('uncaughtException', function (error) {
+  console.log(error.stack);
+});
+
 const server = async () => {
   const app = express();
   try {
