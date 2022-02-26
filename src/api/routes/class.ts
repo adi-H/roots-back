@@ -34,7 +34,7 @@ route.post('/sign', (req, res) => {
 
     const dbConnection = getConnection();
     dbConnection.getRepository('Class')
-    .update({id: classId}, {keyholder: userId})
+    .update({id: classId}, {keyholder: userId, sign_time: new Date()})
     .then(result => {
         console.log(result)
         res.status(200).end()
