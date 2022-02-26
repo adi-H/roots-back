@@ -17,6 +17,9 @@ export class Class {
   @Column()
   name: string;
 
+  @Column({ type: 'timestamptz' })
+  sign_time: Date;
+
   @ManyToOne((type) => Building, (building) => building.id)
   @JoinColumn({ name: 'building_id', referencedColumnName: 'id' })
   building: Building;
