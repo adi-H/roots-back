@@ -15,7 +15,7 @@ route.post('/login', async (req, res) => {
     res.cookie('jwt', jwt);
     res.status(200).end();
   } else {
-    res.status(401).end();
+    res.status(403).end();
   }
 });
 
