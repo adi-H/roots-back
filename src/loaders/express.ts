@@ -21,9 +21,6 @@ export default (app: Application): void => {
   });
   app.enable('trust proxy');
 
-  // Enable Cross Origin Resource Sharing to all origins by default
-  app.use(cors());
-
   // Use Helmet to secure the app by setting various HTTP headers
   app.use(helmet());
 
@@ -32,7 +29,15 @@ export default (app: Application): void => {
 
   app.use(cookieParser());
 
-  app.use(isUserAuthenticated);
+  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+
+  app.use((req, res, next) => {
+    res.header(
+      'Access-Control-Allow-Headers',
+      'Origin, X-Requested-With, Content-Type, Accept'
+    );
+    next();
+  });
 
   // Load API routes
   app.use(`/${config.endpointPrefix}`, apiRoutes);

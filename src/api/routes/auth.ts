@@ -13,6 +13,7 @@ route.post('/login', async (req, res) => {
 
   if (!!jwt) {
     res.cookie('jwt', jwt);
+    res.set('access-control-expose-headers', 'Set-Cookie');
     res.status(200).end();
   } else {
     res.status(403).end();
