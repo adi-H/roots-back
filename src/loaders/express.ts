@@ -39,6 +39,8 @@ export default (app: Application): void => {
     next();
   });
 
+  app.use(isUserAuthenticated);
+
   // Load API routes
   app.use(`/${config.endpointPrefix}`, apiRoutes);
 

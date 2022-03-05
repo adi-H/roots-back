@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { UserBL } from '../bl/UserBL';
-import { isUserAuthenticated } from '../middlewares/middlewares';
 
 const route = Router();
 
