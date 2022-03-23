@@ -12,7 +12,7 @@ import { User } from './User';
 @Entity('Class')
 export class Class {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;
