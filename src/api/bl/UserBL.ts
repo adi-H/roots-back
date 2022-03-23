@@ -7,7 +7,9 @@ export class UserBL {
     const userRepository = getRepository(User);
 
     try {
-      const userToValidate = await userRepository.findOne(userId);
+      const userToValidate = await userRepository.findOne(userId, {
+        relations: ['team', 'role', 'team.parent', 'team.parent.parent'],
+      });
 
       if (userToValidate.password === password) {
         delete userToValidate.password;

@@ -9,7 +9,7 @@ import {
 @Entity('Unit')
 export class Unit {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;

@@ -10,7 +10,6 @@ dotenv.config();
 const databaseUrl = process.env.DB_URL;
 
 const getKey = (keyType: string) => async () => {
-  console.log(fs.readFileSync(`keys/${keyType}.key`, 'utf-8'));
   return await jose.importSPKI(
     fs.readFileSync(`keys/${keyType}.key`, 'utf-8'),
     'RSA256'

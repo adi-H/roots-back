@@ -12,13 +12,10 @@ import { User } from './User';
 @Entity('Class')
 export class Class {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;
-
-  @Column({ type: 'timestamptz' })
-  sign_time: Date;
 
   @ManyToOne((type) => Building, (building) => building.id)
   @JoinColumn({ name: 'building_id', referencedColumnName: 'id' })
@@ -29,8 +26,11 @@ export class Class {
   owner: Unit;
 
   @ManyToOne((type) => User, (user) => user.id)
-  @JoinColumn({ name: 'keyholder_user_id', referencedColumnName: 'id'})
-  keyholder: User;
+  @JoinColumn({ name: 'keyholder_user_id', referencedColumnName: 'id' })
+  keyholder?: User;
+
+  @Column({ type: 'timestamptz', nullable: true })
+  sign_time?: Date;
 
   public constructor(data?: Class) {
     if (data) {
