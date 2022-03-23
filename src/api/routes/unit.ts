@@ -7,9 +7,9 @@ const route = Router();
 
 route.get('/', async (req, res) => {
   try {
-    const units = await UnitBL.getAllUnits();
+    const allUnits = await UnitBL.getAll();
 
-    res.json(units).end();
+    res.json(allUnits).end();
   } catch (e) {
     res.status(500).end();
   }

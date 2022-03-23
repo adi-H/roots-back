@@ -1,4 +1,5 @@
 import jwt from 'express-jwt';
+import { Unit } from 'src/api/entities/Unit';
 import { User } from '../src/api/entities/User';
 
 declare global {
@@ -24,4 +25,10 @@ export interface IUserInputDTO {
 export interface IUserResponseDTO {
   user: User;
   token: string;
+}
+
+export interface UnitsDTO {
+  gdudim: Unit[];
+  plugot: Unit[];
+  teams: Unit[];
 }
