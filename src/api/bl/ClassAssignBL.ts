@@ -34,9 +34,6 @@ export class ClassAssignBL {
     firstDay.setHours(0, 0, 0, 0);
     lastDay.setHours(0, 0, 0, 0);
 
-    console.log(firstDay);
-    console.log(lastDay);
-
     return await classAssignRepository.find({
       where: { startDate: Between(firstDay, lastDay), isApproved: true },
       relations: [

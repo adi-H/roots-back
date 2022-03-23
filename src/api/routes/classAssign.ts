@@ -34,10 +34,8 @@ route.get('/requests', async (req, res) => {
   console.log(req.currentUser);
   try {
     if (currentUser.role.id == Roles.KAHAD_GDUD.valueOf()) {
-      console.log(1);
       requests = await ClassAssignBL.getGdudRequests(currentUser.team);
     } else {
-      console.log(2);
       requests = await ClassAssignBL.getPlugaRequests(currentUser.team);
     }
 
