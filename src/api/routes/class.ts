@@ -2,6 +2,7 @@ import { NextFunction, Request, Response, Router } from 'express';
 import { Logger } from 'winston';
 import { Container } from 'typedi';
 import { getConnection } from 'typeorm';
+import { ClassBL } from '../bl/ClassBL';
 
 const route = Router();
 
@@ -12,7 +13,7 @@ route.get('/', (req, res) => {
   console.log('Getting all classes');
   const dbConnection = getConnection();
   dbConnection
-    .getRepository('Class')
+    .getRepository('class')
     .find({ relations: ['keyholder', 'owner', 'building'] })
     .then((classes) => {
       res.json(classes);
@@ -35,7 +36,7 @@ route.post('/sign', (req, res) => {
 
   const dbConnection = getConnection();
   dbConnection
-    .getRepository('Class')
+    .getRepository('class')
     .update({ id: classId }, { keyholder: userId, sign_time: new Date() })
     .then((result) => {
       console.log(result);
@@ -45,6 +46,24 @@ route.post('/sign', (req, res) => {
       console.error(err.stack);
       res.status(500).end();
     });
+});
+
+route.get('/available/:startDate/:endDate/:classTypeId', async (req, res) => {
+  try {
+    const startDate = new Date(req.params.startDate);
+    const endDate = new Date(req.params.endDate);
+    const classTypeId = parseInt(req.params.classTypeId);
+    const classes = await ClassBL.getAvailableClasses(
+      startDate,
+      endDate,
+      classTypeId,
+      req.currentUser.team.parent.parent.id
+    );
+    res.json(classes).end();
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
 });
 
 export default route;
