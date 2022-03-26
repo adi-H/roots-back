@@ -15,6 +15,10 @@ export class ClassAssignBL {
     return await classAssignRepository.find({
       where: { startDate: Between(firstDay, lastDay), isApproved: true },
       relations: [
+        'createdBy',
+        'createdBy.team',
+        'createdBy.team.parent',
+        'createdBy.team.parent.parent',
         'assignedClass',
         'assignedClass.building',
         'assignedClass.owner',
@@ -27,8 +31,8 @@ export class ClassAssignBL {
   public static async getDaySchedule(date: Date) {
     // TODO: WIP
     const classAssignRepository = getRepository(ClassAssign);
-    const firstDay: Date = Object.assign(date);
-    const lastDay: Date = Object.assign(date);
+    const firstDay: Date = new Date(date.getTime());
+    const lastDay: Date = new Date(date.getTime());
 
     lastDay.setDate(lastDay.getDate() + 1);
     firstDay.setHours(0, 0, 0, 0);
@@ -37,6 +41,10 @@ export class ClassAssignBL {
     return await classAssignRepository.find({
       where: { startDate: Between(firstDay, lastDay), isApproved: true },
       relations: [
+        'createdBy',
+        'createdBy.team',
+        'createdBy.team.parent',
+        'createdBy.team.parent.parent',
         'assignedClass',
         'assignedClass.building',
         'assignedClass.owner',
@@ -67,7 +75,7 @@ export class ClassAssignBL {
       );
 
       return await classAssignRepository.save({
-        name: eventName,
+        title: eventName,
         startDate,
         endDate,
         createdBy: { id: creatingUser.id },
@@ -75,8 +83,8 @@ export class ClassAssignBL {
         assignedClass: { id: assignedClassId },
       });
     } catch (e) {
-      throw new Error('Assignment could not be created');
       console.log(e);
+      throw new Error('Assignment could not be created');
     }
   }
 
@@ -89,6 +97,8 @@ export class ClassAssignBL {
 
       usersUnit = usersUnit.parent;
     }
+
+    return false;
   }
 
   public static async getPlugaRequests(team: Unit) {
@@ -119,7 +129,10 @@ export class ClassAssignBL {
       .leftJoinAndSelect('classAssign.assignedClass', 'class')
       .leftJoinAndSelect('classAssign.createdBy', 'creatingUser')
       .leftJoinAndSelect('class.owner', 'owner')
-      .where((qb) => {
+      .where('classAssign.isApproved = :isApproved', {
+        isApproved: false,
+      })
+      .andWhere((qb) => {
         const subQuery = qb
           .subQuery()
           .select('unit.id')
@@ -132,5 +145,17 @@ export class ClassAssignBL {
       })
       .setParameter('gdudId', team.parent.parent.id)
       .getMany();
+  }
+
+  public static async accept(classAssignId: number) {
+    const classAssignRepository = getRepository(ClassAssign);
+
+    classAssignRepository.update(classAssignId, { isApproved: true });
+  }
+
+  public static async reject(classAssignId: number) {
+    const classAssignRepository = getRepository(ClassAssign);
+
+    classAssignRepository.delete(classAssignId);
   }
 }
