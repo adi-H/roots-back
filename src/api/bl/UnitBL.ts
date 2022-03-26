@@ -7,20 +7,12 @@ export class UnitBL {
     return await unitRepository.find({ where: { parent: IsNull() } });
   }
 
-  // TODO: use sub queries instead of receiving the gdudim as a parameter - we don't have timee
-  public static async getLowerLevelUnits(higherLevelIds: number[]) {
+  public static async getAll() {
     const unitRepository = getRepository(Unit);
 
-    return await unitRepository.find({ where: { parent: In(higherLevelIds) } });
-  }
-
-  public static async getAll() {
-    const gdudim = await this.getGdudim();
-    const plugot = await this.getLowerLevelUnits(gdudim.map((gdud) => gdud.id));
-    const teams = await this.getLowerLevelUnits(
-      plugot.map((pluga) => pluga.id)
-    );
-
-    return { gdudim, plugot, teams };
+    return await unitRepository.find({
+      where: { parent: IsNull() },
+      relations: ['children', 'children.children'],
+    });
   }
 }
