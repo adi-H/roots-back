@@ -1,14 +1,14 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('building')
-export class Building {
+@Entity('class_type')
+export class ClassType {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;
 
-  public constructor(data?: Building) {
+  public constructor(data?: ClassType) {
     if (data) {
       this.name = data.name;
     }

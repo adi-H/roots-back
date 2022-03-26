@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
 import { Role } from './Role';
 import { Unit } from './Unit';
-@Entity('User')
+@Entity('user')
 export class User {
   @PrimaryColumn()
   id: string;
