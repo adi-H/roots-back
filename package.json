@@ -2,9 +2,9 @@
   "name": "roots-back",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node dist/app.js",
+    "start": "node src/app.js",
     "build": "tsc -p .",
     "dev": "nodemon src/app.ts",
     "lint": "eslint .",
