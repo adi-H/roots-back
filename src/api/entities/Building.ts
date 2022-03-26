@@ -1,6 +1,6 @@
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
-@Entity('Building')
+@Entity('building')
 export class Building {
   @PrimaryGeneratedColumn()
   id: string;

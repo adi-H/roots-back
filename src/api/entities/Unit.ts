@@ -3,10 +3,11 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-@Entity('Unit')
+@Entity('unit')
 export class Unit {
   @PrimaryGeneratedColumn()
   id: number;
@@ -17,6 +18,9 @@ export class Unit {
   @ManyToOne((type) => Unit, (unit) => unit.id)
   @JoinColumn({ name: 'parent_id', referencedColumnName: 'id' })
   parent: Unit;
+
+  @OneToMany(() => Unit, (unit) => unit.parent)
+  children: Unit[];
 
   public constructor(data?: Unit) {
     if (data) {
