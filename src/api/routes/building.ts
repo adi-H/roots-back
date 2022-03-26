@@ -10,7 +10,7 @@ route.get('/', (req, res) => {
   console.log('Getting all buildings');
   const dbConnection = getConnection();
   dbConnection
-    .getRepository('Building')
+    .getRepository('building')
     .find()
     .then((buildings) => {
       res.json(buildings);

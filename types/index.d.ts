@@ -26,9 +26,3 @@ export interface IUserResponseDTO {
   user: User;
   token: string;
 }
-
-export interface UnitsDTO {
-  gdudim: Unit[];
-  plugot: Unit[];
-  teams: Unit[];
-}
