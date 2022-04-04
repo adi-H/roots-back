@@ -16,8 +16,8 @@ export class ClassBL {
 
     return await qb
       .select()
-      .leftJoin('class.owner', 'owner')
-      .leftJoin('class.type', 'type')
+      .leftJoinAndSelect('class.owner', 'owner')
+      .leftJoinAndSelect('class.type', 'type')
       .where((qb) => {
         const subQuery = qb
           .subQuery()

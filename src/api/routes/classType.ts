@@ -1,13 +1,13 @@
 import { Router } from 'express';
-import { UrlBL } from '../bl/UrlBL';
+import { ClassTypeBL } from '../bl/ClassTypeBL';
 
 const route = Router();
 
 route.get('/', async (req, res) => {
   try {
-    const broshURL = await UrlBL.getBroshURL();
+    const classTypes = await ClassTypeBL.getAll();
 
-    res.json(broshURL).end();
+    res.json(classTypes).end();
   } catch (e) {
     res.status(500).end();
   }

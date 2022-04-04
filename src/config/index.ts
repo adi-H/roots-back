@@ -54,7 +54,7 @@ const getPubicKey = async () =>
   );
 
 export default {
-  port: process.env.PORT || 8000,
+  port: process.env.PORT || 9000,
   databaseURL: databaseUrl,
   jwtSecret: process.env.JWT_SECRET,
   logs: {
