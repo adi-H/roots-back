@@ -18,7 +18,7 @@ import {
     @Column()
     quantity: number;
   
-    @Column()
+    @Column({nullable: true})
     description?: string;
 
     @ManyToOne((type) => Unit, (unit) => unit.id)
@@ -26,7 +26,7 @@ import {
     owner: Unit;
 
     @ManyToOne((type) => Unit, (unit) => unit.id)
-    @JoinColumn({ name: 'used_by', referencedColumnName: 'id' })
+    @JoinColumn({ name: 'used_by', referencedColumnName: 'id', })
     usedBy?: Unit;
 
     @Column({name: 'started_use_at', type: 'timestamp without time zone', nullable: true })
