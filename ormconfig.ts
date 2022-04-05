@@ -8,9 +8,9 @@ const ORMconfig = {
   host: config.databaseURL,
   port: 5432,
   username: 'postgres',
-  password: 'postgres',
+  password: '123456',
   database: 'roots',
-  synchronize: false,
+  synchronize: true,
   logging: false,
   entities: ['dist/api/entities/**/*.js', 'src/api/entities/**/*.ts'],
   cli: {
