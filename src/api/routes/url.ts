@@ -3,7 +3,7 @@ import { UrlBL } from '../bl/UrlBL';
 
 const route = Router();
 
-route.get('/', async (req, res) => {
+route.get('/brosh', async (req, res) => {
   try {
     const broshURL = await UrlBL.getBroshURL();
 
