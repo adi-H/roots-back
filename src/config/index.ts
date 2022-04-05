@@ -55,7 +55,10 @@ const getPubicKey = async () =>
 
 export default {
   port: process.env.PORT || 9000,
-  databaseURL: databaseUrl,
+  databaseURL:
+    process.env.NODE_ENV === 'production'
+      ? 'psql-roots-postgresql'
+      : 'localhost',
   jwtSecret: process.env.JWT_SECRET,
   logs: {
     level: process.env.LOG_LEVEL,
