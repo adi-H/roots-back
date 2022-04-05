@@ -13,7 +13,7 @@ export class ItemsBL {
 
     return await itemsRepository.find({
       where: {owner: ownerId},
-      relations: ['owner', 'usedBy']
+      relations: ['owner', 'owner.parent', 'usedBy', 'usedBy.parent']
     })
   }
 
