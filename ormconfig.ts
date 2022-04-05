@@ -8,7 +8,7 @@ const ORMconfig = {
   host: config.databaseURL,
   port: 5432,
   username: 'postgres',
-  password: '123456',
+  password: 'postgres',
   database: 'roots',
   synchronize: true,
   logging: false,
