@@ -8,6 +8,7 @@ import unit from './unit';
 import url from './url';
 import items from './items';
 import classType from './classType';
+import attendance from './attendance';
 
 const routes = Router();
 
@@ -20,5 +21,6 @@ routes.use('/unit', unit);
 routes.use('/url', url);
 routes.use('/items', items);
 routes.use('/classType', classType);
+routes.use('/attendance', attendance);
 
 export default routes;

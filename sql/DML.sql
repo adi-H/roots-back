@@ -138,3 +138,21 @@ INSERT INTO public.role (id, name) VALUES (4, 'קל"ג גדודי');
 INSERT INTO public.role (id, name) VALUES (5, 'קל"ג פלוגתי');
 INSERT INTO public.role (id, name) VALUES (6, 'סמ"פ');
 INSERT INTO public.role (id, name) VALUES (7, 'ממ"ש');
+INSERT INTO public.role (id, name) VALUES (8, 'צוער רגיל');
+
+-- teams
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151373, 'Aa123456', 'אסף', 'בן חיים', '050-7776645', 38, 1);
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151374, 'Aa123456', 'רוני', 'קילימניק', '050-8685545', 38, 8);
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151375, 'Aa123456', 'אופק', 'שגב', '050-8675545', 38, 8);
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151376, 'Aa123456', 'גונן', 'מילר', '050-8055645', 38, 8);
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151377, 'Aa123456', 'איתי', 'קלומק', '050-8025645', 38, 8);
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151378, 'Aa123456', 'אביחי', 'קדוש', '052-7776645', 35, 8);
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151379, 'Aa123456', 'זיו', 'כהן', '052-8685545', 35, 8);
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151380, 'Aa123456', 'שגיא', 'שכטר', '052-8675545', 35, 8);
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151381, 'Aa123456', 'עידו', 'צדקה', '052-8055645', 35, 8);
+INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151382, 'Aa123456', 'רום', 'קרלבסקי', '052-8025645', 35, 8);
+
+-- attendance
+INSERT INTO public.attendance (id, reason, in_attendance) VALUES (315151382, 'גימלים', false);
+INSERT INTO public.attendance (id, reason, in_attendance) VALUES (315151374, '', true);
+INSERT INTO public.attendance (id, reason, in_attendance) VALUES (315151373, '', true);
