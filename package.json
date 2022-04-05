@@ -4,8 +4,8 @@
   "description": "",
   "main": "src/app.js",
   "scripts": {
-    "start": "node src/app.js",
-    "build": "tsc -p .",
+    "start": "node ./dist/src/app.js",
+    "build": "tsc",
     "dev": "nodemon src/app.ts",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
