@@ -10,7 +10,7 @@ const ORMconfig = {
   username: 'postgres',
   password: 'postgres',
   database: 'roots',
-  synchronize: true,
+  synchronize: false,
   logging: false,
   entities: ['dist/api/entities/**/*.js', 'src/api/entities/**/*.ts'],
   cli: {

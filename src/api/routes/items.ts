@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import { ItemsBL } from '../bl/ItemsBL';
-import { Items } from '../entities/Items';
 
 const route = Router();
 
@@ -43,6 +42,24 @@ route.delete('/:itemId', async (req, res) => {
     await ItemsBL.deleteUsage(itemToDeleteId)
 
     console.log(`usage ${itemToDeleteId} ended`)
+    res.status(200).end();
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
+});
+
+route.put('/create', async (req, res) => {
+  try {
+    const name = req.body.name;
+    const quantity = req.body.quantity;
+    const ownerId = req.body.owner;
+
+    // TODO: add validations
+
+    await ItemsBL.create(name, quantity, ownerId)
+
+    console.log(`created ${quantity} of item ${name} in inventory ${ownerId}`)
     res.status(200).end();
   } catch (e) {
     console.log(e);
