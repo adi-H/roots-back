@@ -15,4 +15,12 @@ export class UnitBL {
       relations: ['children', 'children.children'],
     });
   }
+
+  public static async getCompanyTeams(companyId: number) {
+    const unitRepository = getRepository(Unit);
+
+    return await unitRepository.find({
+      where: { parent: companyId },
+    });
+  }
 }

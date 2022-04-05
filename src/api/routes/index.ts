@@ -6,6 +6,7 @@ import classes from './class';
 import classAssigns from './classAssign';
 import unit from './unit';
 import url from './url';
+import attendance from './attendance'
 
 const routes = Router();
 
@@ -16,5 +17,6 @@ routes.use('/class', classes);
 routes.use('/classAssign', classAssigns);
 routes.use('/unit', unit);
 routes.use('/url', url);
+routes.use('/attendance', attendance);
 
 export default routes;

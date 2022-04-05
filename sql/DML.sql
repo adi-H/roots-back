@@ -151,3 +151,8 @@ INSERT INTO public.user (id, password, first_name, last_name, phone_number, team
 INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151380, 'Aa123456', 'שגיא', 'שכטר', '052-8675545', 35, 8);
 INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151381, 'Aa123456', 'עידו', 'צדקה', '052-8055645', 35, 8);
 INSERT INTO public.user (id, password, first_name, last_name, phone_number, team_id, role_id) VALUES (315151382, 'Aa123456', 'רום', 'קרלבסקי', '052-8025645', 35, 8);
+
+-- attendance
+INSERT INTO public.attendance (id, reason, in_attendance) VALUES (315151382, 'גימלים', false);
+INSERT INTO public.attendance (id, reason, in_attendance) VALUES (315151374, '', true);
+INSERT INTO public.attendance (id, reason, in_attendance) VALUES (315151373, '', true);
