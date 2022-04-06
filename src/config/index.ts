@@ -7,8 +7,6 @@ process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 dotenv.config();
 
-const databaseUrl = process.env.DB_URL;
-
 const getKey = (keyType: string) => async () => {
   return await jose.importSPKI(
     fs.readFileSync(`keys/${keyType}.key`, 'utf-8'),
@@ -54,8 +52,15 @@ const getPubicKey = async () =>
   );
 
 export default {
+  clientHost:
+    process.env.NODE_ENV === 'production'
+      ? 'http://bhd1roots.com'
+      : 'http://localhost:3000',
   port: process.env.PORT || 9000,
-  databaseURL: databaseUrl,
+  databaseURL:
+    process.env.NODE_ENV === 'production'
+      ? 'psql-roots-postgresql'
+      : 'localhost',
   jwtSecret: process.env.JWT_SECRET,
   logs: {
     level: process.env.LOG_LEVEL,
