@@ -1,4 +1,12 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  OneToOne,
+  PrimaryColumn,
+} from 'typeorm';
+import { Attendance } from './Attendance';
 import { Role } from './Role';
 import { Unit } from './Unit';
 @Entity('user')
@@ -25,6 +33,9 @@ export class User {
   @ManyToOne((type) => Role, (role) => role.id)
   @JoinColumn({ name: 'role_id', referencedColumnName: 'id' })
   role?: Role;
+
+  @OneToOne(() => Attendance, (Attendance) => Attendance.user) // specify inverse side as a second parameter
+  attendance: Attendance;
 
   public constructor(data?: User) {
     if (data) {

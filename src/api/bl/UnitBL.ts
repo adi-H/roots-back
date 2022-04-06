@@ -16,11 +16,16 @@ export class UnitBL {
     });
   }
 
-  public static async getCompanyTeams(companyId: number) {
+  public static async getCompanyTeamsWithCadets(companyId: number) {
     const unitRepository = getRepository(Unit);
 
-    return await unitRepository.find({
-      where: { parent: companyId },
+    return await unitRepository.findOne({
+      where: { id: companyId },
+      relations: [
+        'children',
+        'children.teamCadets',
+        'children.teamCadets.attendance',
+      ],
     });
   }
 }

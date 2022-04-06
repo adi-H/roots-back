@@ -19,10 +19,24 @@ route.get('/', async (req, res) => {
 route.post('/companyTeams', async (req, res) => {
   try {
     const user: User = req.currentUser;
-    const companyUnits = await UnitBL.getCompanyTeams(req.body.companyId);
+    // const companyUnits = await UnitBL.getCompanyTeams(req.body.companyId);
+
+    res.json().end();
+  } catch (e) {
+    res.status(500).end();
+  }
+});
+
+route.get('/allCadetsInCompany', async (req, res) => {
+  try {
+    const user: User = req.currentUser;
+    const companyUnits = await UnitBL.getCompanyTeamsWithCadets(
+      user.team.parent.id
+    );
 
     res.json(companyUnits).end();
   } catch (e) {
+    console.log(e);
     res.status(500).end();
   }
 });
