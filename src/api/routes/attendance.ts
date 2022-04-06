@@ -29,7 +29,11 @@ route.get('/clear', async (req, res) => {
     const userCompanyId = req.currentUser.team.parent.id;
     await AttendanceBL.clearCompany(userCompanyId);
 
-    res.status(200).end();
+    const company = await UnitBL.getCompanyTeamsWithCadets(
+      req.currentUser.team.parent.id
+    );
+
+    res.json(company).end();
   } catch (e) {
     console.log(e);
     res.status(500).end();

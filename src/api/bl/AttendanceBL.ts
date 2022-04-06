@@ -1,5 +1,6 @@
-import { getRepository } from 'typeorm';
+import { getRepository, In } from 'typeorm';
 import { Attendance } from '../entities/Attendance';
+import { User } from '../entities/User';
 export class AttendanceBL {
   public static async addAttendances(attendances: Attendance[]) {
     const attendanceRepository = getRepository(Attendance);
@@ -10,12 +11,28 @@ export class AttendanceBL {
   public static async clearCompany(companyId: number) {
     const attendanceRepository = getRepository(Attendance);
 
-    return await attendanceRepository
+    const attendances = await attendanceRepository
       .createQueryBuilder('attendance')
-      .leftJoin('attendance.user', 'user')
-      .leftJoin('user.team', 'team')
-      .leftJoin('team.parent', 'company')
-      .where('company.id = :companyId', { companyId })
-      .delete();
+      .select()
+      .leftJoinAndSelect('attendance.user', 'user')
+      .where((qb) => {
+        const subQuery = qb
+          .subQuery()
+          .select('user.id')
+          .from(User, 'user')
+          .leftJoin('user.team', 'team')
+          .leftJoin('team.parent', 'company')
+          .where('company.id = :companyId', { companyId })
+          .getQuery();
+
+        return `attendance.user.id IN ${subQuery}`;
+      })
+      .getMany();
+
+    const attendancesIds = attendances.map((attendance) => attendance.user.id);
+
+    await attendanceRepository.remove(attendances);
+
+    await attendanceRepository.delete({ user: { id: In(attendancesIds) } });
   }
 }
