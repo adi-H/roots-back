@@ -13,7 +13,7 @@ const ORMconfig = {
   schema: 'public',
   synchronize: true,
   logging: false,
-  entities: ['src/api/entities/**/*.js', 'src/api/entities/**/*.ts'],
+  entities: ['dist/src/api/entities/**/*.js', 'src/api/entities/**/*.ts'],
   cli: {
     entitiesDir: 'dist/api/entities',
   },
