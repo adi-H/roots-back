@@ -43,14 +43,14 @@ spec:
                   - /bin/sh 
                   - "-c"
                   - | 
-                          wget --header="Origin=http://localhost:3000" http://localhost:9000/api/health
+                          wget --header="Origin: http://localhost:3000" http://localhost:9000/api/health
           readinessProbe:
                exec:
                   command:
                   - /bin/sh
                   - "-c"   
                   - | 
-                   wget --header="Origin=http://localhost:3000" http://localhost:9000/api/health
+                   wget --header="Origin: http://localhost:3000" http://localhost:9000/api/health
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
