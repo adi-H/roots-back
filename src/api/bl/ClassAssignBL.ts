@@ -104,8 +104,6 @@ export class ClassAssignBL {
   public static async getPlugaRequests(team: Unit) {
     const classAssignRepository = getRepository(ClassAssign);
 
-    console.log(team);
-
     return await classAssignRepository
       .createQueryBuilder('classAssign')
       .select()

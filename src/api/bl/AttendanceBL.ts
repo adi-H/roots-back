@@ -35,4 +35,11 @@ export class AttendanceBL {
 
     await attendanceRepository.delete({ user: { id: In(attendancesIds) } });
   }
+
+  public static async delete(id: string) {
+    const attendanceRepository = getRepository(Attendance);
+    const userRepository = getRepository(User);
+
+    attendanceRepository.delete({ user: await userRepository.findOne(id) });
+  }
 }
