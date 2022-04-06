@@ -29,11 +29,32 @@ route.get('/clear', async (req, res) => {
     const userCompanyId = req.currentUser.team.parent.id;
     await AttendanceBL.clearCompany(userCompanyId);
 
-    const company = await UnitBL.getCompanyTeamsWithCadets(
-      req.currentUser.team.parent.id
-    );
+    try {
+      SocketConnection.sendCompany(
+        await UnitBL.getCompanyTeamsWithCadets(req.currentUser.team.parent.id),
+        req.currentUser.team.parent.id
+      );
+    } catch (e) {}
 
-    res.json(company).end();
+    res.status(200).end();
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
+});
+
+route.delete('/:attendanceId', async (req, res) => {
+  try {
+    await AttendanceBL.delete(req.params.attendanceId);
+
+    try {
+      SocketConnection.sendCompany(
+        await UnitBL.getCompanyTeamsWithCadets(req.currentUser.team.parent.id),
+        req.currentUser.team.parent.id
+      );
+    } catch (e) {}
+
+    res.status(200).end();
   } catch (e) {
     console.log(e);
     res.status(500).end();

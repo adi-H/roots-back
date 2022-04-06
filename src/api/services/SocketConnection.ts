@@ -44,7 +44,6 @@ export class SocketConnection {
         try {
           const user = await verifyJWT(jwt);
           this.clients.set(socket.id, user);
-          console.log(user.team.parent.id.toString());
           socket.join(user.team.parent.id.toString());
         } catch (e) {
           socket.disconnect();
@@ -58,7 +57,6 @@ export class SocketConnection {
   }
 
   public static sendCompany(pluga: Unit, room: number) {
-    console.log(room);
     this.io.to(room.toString()).emit('sendCompany', pluga);
   }
 }
