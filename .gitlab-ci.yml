@@ -59,4 +59,3 @@ helm-upgrade:
     - helm upgrade back ci/k3s/roots-back/ --install --values=ci/k3s/roots-back/values.yaml --set image.tag="${CI_COMMIT_SHA}"
   only:
     - ci-cd
-    - ci-cd
