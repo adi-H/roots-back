@@ -40,17 +40,17 @@ spec:
           livenessProbe:
                 exec:
                   command:
-                  - bash 
-                  - "-c" 
+                  - /bin/sh 
+                  - "-c"
                   - | 
                           wget --header="Origin=http://localhost:3000" http://localhost:9000/health
           readinessProbe:
                exec:
                   command:
-                  - bash
+                  - /bin/sh
                   - "-c"   
                   - | 
-                   wget http://localhost:9000/health
+                   wget --header="Origin=http://localhost:3000" http://localhost:9000/health
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
