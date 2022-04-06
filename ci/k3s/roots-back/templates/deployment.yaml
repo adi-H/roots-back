@@ -35,16 +35,22 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - name: http
-              containerPort: 80
+              containerPort: 9000
               protocol: TCP
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
+                exec:
+                  command:
+                  - bash 
+                  - "-c" 
+                  - | 
+                          wget --header="Origin=http://localhost:3000" http://localhost:9000/health
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
+               exec:
+                  command:
+                  - bash
+                  - "-c"   
+                  - | 
+                   wget http://localhost:9000/health
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
