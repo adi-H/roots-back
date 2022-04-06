@@ -8,7 +8,7 @@ const isUserAuthenticated = async (
   res: Response,
   next: NextFunction
 ) => {
-  if (req.path.includes('login')) {
+  if (req.path.includes('login') || req.path.includes('health')) {
     next();
     return;
   }
@@ -16,13 +16,18 @@ const isUserAuthenticated = async (
   const jwt = req.cookies.jwt;
 
   try {
-    const result = await jose.jwtVerify(jwt, await config.getPublicKey());
-    delete result.payload.iat;
-    req.currentUser = (result.payload as unknown) as User;
+    req.currentUser = await verifyJWT(jwt);
     next();
   } catch (e) {
     res.status(401).end();
   }
 };
 
-export { isUserAuthenticated };
+const verifyJWT = async (jwt: string) => {
+  const result = await jose.jwtVerify(jwt, await config.getPublicKey());
+  delete result.payload.iat;
+
+  return (result.payload as unknown) as User;
+};
+
+export { isUserAuthenticated, verifyJWT };

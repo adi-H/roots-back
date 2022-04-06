@@ -6,6 +6,7 @@ import {
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { User } from './User';
 
 @Entity('unit')
 export class Unit {
@@ -21,6 +22,9 @@ export class Unit {
 
   @OneToMany(() => Unit, (unit) => unit.parent)
   children: Unit[];
+
+  @OneToMany(() => User, (user) => user.team)
+  teamCadets: User[];
 
   public constructor(data?: Unit) {
     if (data) {

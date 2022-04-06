@@ -29,7 +29,24 @@ export default (app: Application): void => {
 
   app.use(cookieParser());
 
-  app.use(cors({ credentials: true, origin: 'http://localhost:3000' }));
+  const whitelist = [
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
+    'http://bhd1roots.com',
+  ];
+
+  const corsOptions = {
+    origin: function (origin, callback) {
+      if (whitelist.indexOf(origin) !== -1) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
+    credentials: true,
+  };
+
+  app.use(cors(corsOptions));
 
   app.use((req, res, next) => {
     res.header(

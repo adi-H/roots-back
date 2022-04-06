@@ -15,4 +15,17 @@ export class UnitBL {
       relations: ['children', 'children.children'],
     });
   }
+
+  public static async getCompanyTeamsWithCadets(companyId: number) {
+    const unitRepository = getRepository(Unit);
+
+    return await unitRepository.findOne({
+      where: { id: companyId },
+      relations: [
+        'children',
+        'children.teamCadets',
+        'children.teamCadets.attendance',
+      ],
+    });
+  }
 }
