@@ -12,7 +12,7 @@ export class ItemsBL {
     const itemsRepository = getRepository(Items)
 
     return await itemsRepository.find({
-      where: {owner: ownerId},
+      where: { owner: ownerId },
       relations: ['owner', 'owner.parent', 'usedBy', 'usedBy.parent']
     })
   }
@@ -25,18 +25,18 @@ export class ItemsBL {
    * @param quantity The quantity used
    * @param description Free text description
    */
-  public static async useItem( id: string, usedBy: string, quantity: number, description: string): Promise<void>{
-      const itemsRepository = getRepository(Items)
-  
-      try {
-        const currentItem = await itemsRepository.findOne(id, {relations: ['owner', 'usedBy']});
-        const unit = await getRepository(Unit).findOne(usedBy);
-        await itemsRepository.update({id}, {quantity: currentItem.quantity - quantity})
-        await itemsRepository.save({name: currentItem.name, quantity, owner: currentItem.owner, description, usedBy: unit, startedUseAt: new Date()})
-      } catch (e) {
-        console.log(e.stack);
-        throw new Error('Could not use items');
-      }
+  public static async useItem(id: string, usedBy: string, quantity: number, description: string): Promise<void> {
+    const itemsRepository = getRepository(Items)
+
+    try {
+      const currentItem = await itemsRepository.findOne(id, { relations: ['owner', 'usedBy'] });
+      const unit = await getRepository(Unit).findOne(usedBy);
+      await itemsRepository.update({ id }, { quantity: currentItem.quantity - quantity })
+      await itemsRepository.save({ name: currentItem.name, quantity, owner: currentItem.owner, description, usedBy: unit, startedUseAt: new Date() })
+    } catch (e) {
+      console.log(e.stack);
+      throw new Error('Could not use items');
+    }
   }
 
   /**
@@ -47,15 +47,22 @@ export class ItemsBL {
     const itemsRepository = getRepository(Items)
 
     try {
-      const itemToDelete = await itemsRepository.findOne(id, {relations: ['owner', 'usedBy']});
-      const itemsInInventory = (await itemsRepository.find({owner: itemToDelete.owner, name: itemToDelete.name, usedBy: null}))[0]
-      await itemsRepository.update({id: itemsInInventory.id}, {quantity: itemsInInventory.quantity + itemToDelete.quantity})
-      await itemsRepository.delete({id})
+      let a;
+      const itemToDelete = await itemsRepository.findOne(id, { relations: ['owner', 'usedBy'] });
+      const itemsInInventory = (await itemsRepository.find({ owner: itemToDelete.owner, name: itemToDelete.name }))
+      itemsInInventory.forEach(i => {
+        if (i.usedBy !== null) {
+          a = i;
+        }
+      })
+
+      await itemsRepository.update({ id: itemToDelete.id }, { quantity: a.quantity + itemToDelete.quantity })
+      await itemsRepository.delete({ id: a.id })
     } catch (e) {
       console.log(e.stack);
       throw new Error('Could not use items');
     }
-  } 
+  }
 
   /**
    * Create a new item in the inventory
@@ -70,10 +77,10 @@ export class ItemsBL {
     try {
       const owner = await getRepository(Unit).findOne(ownerId)
 
-      await itemsRepository.save({name, quantity, owner})
+      await itemsRepository.save({ name, quantity, owner })
     } catch (e) {
       console.log(e.stack);
       throw new Error('Could not use items');
     }
-  } 
+  }
 }

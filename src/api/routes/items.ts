@@ -16,7 +16,7 @@ route.get('/owner/:ownerId', async (req, res) => {
 
 route.post('/use', async (req, res) => {
   try {
-    const itemId = req.body.id;
+    const itemId = req.body.itemId;
     const usedBy = req.body.usedBy;
     const quantity = req.body.quantity;
     const description = req.body.description;
