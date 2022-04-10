@@ -23,9 +23,11 @@ route.post('/use', async (req, res) => {
 
     // TODO: add validations
 
-    await ItemsBL.useItem(itemId, usedBy, quantity, description)
+    await ItemsBL.useItem(itemId, usedBy, quantity, description);
 
-    console.log(`${usedBy} used ${quantity} of item ${itemId} with the description ${description}`)
+    console.log(
+      `${usedBy} used ${quantity} of item ${itemId} with the description ${description}`
+    );
     res.status(200).end();
   } catch (e) {
     console.log(e);
@@ -39,9 +41,23 @@ route.delete('/:itemId', async (req, res) => {
 
     // TODO: add validations
 
-    await ItemsBL.deleteUsage(itemToDeleteId)
+    await ItemsBL.delete(parseInt(itemToDeleteId));
+    res.status(200).end();
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
+});
 
-    console.log(`usage ${itemToDeleteId} ended`)
+route.delete('/usage/:itemId', async (req, res) => {
+  try {
+    const itemToDeleteId = req.params.itemId;
+
+    // TODO: add validations
+
+    await ItemsBL.deleteUsage(itemToDeleteId);
+
+    console.log(`usage ${itemToDeleteId} ended`);
     res.status(200).end();
   } catch (e) {
     console.log(e);
@@ -57,10 +73,10 @@ route.put('/create', async (req, res) => {
 
     // TODO: add validations
 
-    await ItemsBL.create(name, quantity, ownerId)
+    const createdItem = await ItemsBL.create(name, quantity, ownerId);
 
-    console.log(`created ${quantity} of item ${name} in inventory ${ownerId}`)
-    res.status(200).end();
+    console.log(`created ${quantity} of item ${name} in inventory ${ownerId}`);
+    res.json(createdItem).end();
   } catch (e) {
     console.log(e);
     res.status(500).end();

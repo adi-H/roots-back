@@ -16,6 +16,18 @@ route.get('/', async (req, res) => {
   }
 });
 
+route.get('/companiesByGdud/:gdudId', async (req, res) => {
+  try {
+    const gdudId = parseInt(req.params.gdudId);
+    const gdudCompanies = await UnitBL.companiesByGdud(gdudId);
+
+    res.json(gdudCompanies).end();
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
+});
+
 route.get('/allCadetsInCompany', async (req, res) => {
   try {
     const user: User = req.currentUser;

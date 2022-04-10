@@ -28,4 +28,12 @@ export class UnitBL {
       ],
     });
   }
+
+  public static async companiesByGdud(gdudId: number) {
+    const unitRepository = getRepository(Unit);
+
+    return await unitRepository.find({
+      where: { parent: gdudId },
+    });
+  }
 }

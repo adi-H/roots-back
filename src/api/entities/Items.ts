@@ -26,13 +26,15 @@ export class Items {
   owner: Unit;
 
   @ManyToOne((type) => Unit, (unit) => unit.id)
-  @JoinColumn({ name: 'used_by', referencedColumnName: 'id', })
-  usedBy?: Unit;
+  @JoinColumn({ name: 'used_by', referencedColumnName: 'id' })
+  usedBy: Unit;
 
-  @Column({ name: 'started_use_at', type: 'timestamp without time zone', nullable: true })
+  @Column({
+    name: 'started_use_at',
+    type: 'timestamp without time zone',
+    nullable: true,
+  })
   startedUseAt?: Date;
 
-  public constructor(data?: Items) {
-
-  }
+  public constructor(data?: Items) {}
 }
