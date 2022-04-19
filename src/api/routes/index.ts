@@ -9,6 +9,8 @@ import url from './url';
 import items from './items';
 import classType from './classType';
 import attendance from './attendance';
+import recipient from './recipient';
+import inquiry from './inquiry';
 import health from './health';
 
 const routes = Router();
@@ -23,6 +25,8 @@ routes.use('/url', url);
 routes.use('/items', items);
 routes.use('/classType', classType);
 routes.use('/attendance', attendance);
+routes.use('/recipient', recipient);
+routes.use('/inquiry', inquiry);
 routes.use('/health', health);
 
 export default routes;
