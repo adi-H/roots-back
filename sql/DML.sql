@@ -55,6 +55,11 @@ INSERT INTO public.class_type (id, name) VALUES (2, 'דו"צ');
 INSERT INTO public.class_type (id, name) VALUES (3, 'פלוגתית');
 INSERT INTO public.class_type (id, name) VALUES (4, 'תלת פלוגתית');
 
+-- Class Functionallity
+INSERT INTO public.class_functionallity (id, name) VALUES (1, 'מקרן');
+INSERT INTO public.class_functionallity (id, name) VALUES (2, 'לוח');
+INSERT INTO public.class_functionallity (id, name) VALUES (3, 'מזגן');
+
 -- Classes
 INSERT INTO public.class (id, name, building_id, owner_unit_id, type_id, keyholder_user_id, sign_time) VALUES (1, '102', 1, NULL, NULL, NULL, NULL);
 INSERT INTO public.class (id, name, building_id, owner_unit_id, type_id, keyholder_user_id, sign_time) VALUES (2, '104', 1, NULL, NULL, NULL, NULL);
