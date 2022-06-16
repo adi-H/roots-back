@@ -2,7 +2,6 @@ import { getRepository, In } from 'typeorm';
 import { User } from '../entities/User';
 import * as jose from 'jose';
 import config from '../../config';
-import { Unit } from '../entities/Unit';
 export class UserBL {
   public static async validatePassword(userId: string, password: string) {
     const userRepository = getRepository(User);
@@ -33,7 +32,7 @@ export class UserBL {
     const userRepository = getRepository(User);
 
     return await userRepository.find({
-      team: {id: teamId}
+      team: { id: teamId },
     });
   }
 
@@ -41,7 +40,24 @@ export class UserBL {
     const userRepository = getRepository(User);
 
     return await userRepository.find({
-      team: {id: In(teamIds)}
+      team: { id: In(teamIds) },
     });
+  }
+
+  public static async updateRole(userId: number, roleId: number) {
+    const userRepository = getRepository(User);
+
+    try {
+      userRepository.update(userId, {
+        role: {
+          id: roleId,
+        },
+      });
+
+      return true;
+    } catch (e) {
+      console.log(e);
+      return '';
+    }
   }
 }
