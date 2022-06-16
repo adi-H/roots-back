@@ -46,6 +46,9 @@ export class Class {
   @Column({ nullable: true })
   projector: number;
 
+  @Column({ nullable: true })
+  ac: number;
+
   public constructor(data?: Class) {
     if (data) {
       this.name = data.name;
