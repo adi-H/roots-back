@@ -5,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { ItemsBL } from '../bl/ItemsBL';
 import { Unit } from './Unit';
 
 @Entity('items')
@@ -16,7 +17,13 @@ export class Items {
   name: string;
 
   @Column()
-  quantity: number;
+  inUseQuantity: number;
+
+  @Column()
+  readyToUseQuantity: number;
+
+  @Column()
+  unUseableQuantity: number;
 
   @Column({ nullable: true })
   description?: string;
@@ -38,3 +45,5 @@ export class Items {
 
   public constructor(data?: Items) {}
 }
+
+export type CreateItem = Pick<Items, "name" | "owner" | "unUseableQuantity" | "readyToUseQuantity" | "description">
