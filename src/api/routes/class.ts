@@ -50,13 +50,15 @@ route.post('/sign', (req, res) => {
 
 route.get('/available/:startDate/:endDate/:classTypeId', async (req, res) => {
   try {
+    console.log("im here!!")
     const startDate = new Date(req.params.startDate);
     const endDate = new Date(req.params.endDate);
     const classTypeId = parseInt(req.params.classTypeId);
-    const classes = await ClassBL.getAvailableClasses(
+    const classes = await ClassBL.filterAvailableClasses(
       startDate,
       endDate,
       classTypeId,
+      [],
       req.currentUser.team.parent.parent.id
     );
     res.json(classes).end();
