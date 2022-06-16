@@ -36,7 +36,7 @@ export class Class {
 
   @Column({ type: 'timestamp without time zone', nullable: true })
   sign_time?: Date;
-  //class functionallity
+  //class functionality
   @Column({ nullable: true })
   pc: number;
 
