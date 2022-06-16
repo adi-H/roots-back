@@ -55,6 +55,7 @@ route.post('/', async (req, res) => {
   ) {
     res.status(400).end();
   } else {
+    console.log(req);
     try {
       const createdAssign = await ClassAssignBL.createClassAssignmentRequest(
         req.body.title,
