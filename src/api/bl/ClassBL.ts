@@ -10,7 +10,7 @@ export class ClassBL {
     endDate: Date,
     classTypeId: number,
     addedRequirements: string[],
-    userGdudId: number
+    userPlatuneId: number
   ) {
     const classRepository = getRepository(Class);
     const qb = classRepository.createQueryBuilder('class');
@@ -34,7 +34,7 @@ export class ClassBL {
 
         return `NOT (class.id IN ${subQuery})`;
       })
-      .setParameter('gdudId', userGdudId)
+      .setParameter('platuneId', userPlatuneId)
       .setParameter("sumQuery", ClassBL.createScoreQuery(addedRequirements, qb))
       .setParameter('classTypeId', classTypeId)
       .setParameter(
@@ -51,15 +51,7 @@ export class ClassBL {
   }
 
   private static createScoreQuery(addedRequirements: string[], qb:any) {
-    const subQuery = qb
-          .subQuery()
-          .select('unit.id')
-          .from(Unit, 'unit')
-          .leftJoin('unit.parent', 'parentUnit')
-          .where('parentUnit.id = :gdudId')
-          .getQuery();
-
-    return `SUM(class.owner.id in ${subQuery})+SUM(class.type.id = :classTypeId)`+ addedRequirements.map(
+    return `SUM(class.owner.id = :platuneId)+SUM(class.type.id = :classTypeId)`+ addedRequirements.map(
       requirementName=>`+SUM(class.${requirementName} = 1)`) + " as SCORE"
   }
 

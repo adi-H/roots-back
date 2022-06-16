@@ -48,7 +48,7 @@ route.post('/sign', (req, res) => {
     });
 });
 
-route.get('/available/:startDate/:endDate/:classTypeId', async (req, res) => {
+route.post('/available/:startDate/:endDate/:classTypeId', async (req, res) => {
   try {
     console.log("im here!!")
     const startDate = new Date(req.params.startDate);
@@ -58,8 +58,8 @@ route.get('/available/:startDate/:endDate/:classTypeId', async (req, res) => {
       startDate,
       endDate,
       classTypeId,
-      [],
-      req.currentUser.team.parent.parent.id
+      req.body.addedRequirements,
+      req.currentUser.team.parent.id
     );
     res.json(classes).end();
   } catch (e) {
