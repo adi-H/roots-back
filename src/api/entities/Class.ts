@@ -36,18 +36,6 @@ export class Class {
 
   @Column({ type: 'timestamp without time zone', nullable: true })
   sign_time?: Date;
-  //class functionality
-  @Column({ nullable: true })
-  pc: number;
-
-  @Column({ nullable: true })
-  board: number;
-
-  @Column({ nullable: true })
-  projector: number;
-
-  @Column({ nullable: true })
-  ac: number;
 
   public constructor(data?: Class) {
     if (data) {
