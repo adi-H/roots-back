@@ -13,6 +13,7 @@ import recipient from './recipient';
 import inquiry from './inquiry';
 import health from './health';
 import role from './role';
+import quiz from './quiz';
 
 const routes = Router();
 
@@ -30,5 +31,6 @@ routes.use('/recipient', recipient);
 routes.use('/inquiry', inquiry);
 routes.use('/health', health);
 routes.use('/role', role);
+routes.use('/quiz', quiz);
 
 export default routes;

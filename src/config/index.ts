@@ -55,11 +55,11 @@ export default {
   clientHost:
     process.env.NODE_ENV === 'production'
       ? 'http://bhd1roots.com'
-      : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+      : ['http://localhost', 'http://127.0.0.1'],
   port: process.env.PORT || 9000,
   databaseURL:
     process.env.NODE_ENV === 'production'
-      ? 'psql-roots-postgresql'
+      ? process.env.POSTGRES_HOST ?? 'psql-roots-postgresql'
       : 'localhost',
   jwtSecret: process.env.JWT_SECRET,
   logs: {
