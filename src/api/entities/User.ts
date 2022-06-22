@@ -44,4 +44,12 @@ export class User {
       this.role = data.role || this.role;
     }
   }
+
+  toJSON(): Partial<User> {
+    const { password, ...user } = this;
+
+    return {
+      ...user,
+    };
+  }
 }

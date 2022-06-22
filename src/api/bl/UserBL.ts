@@ -3,6 +3,29 @@ import { User } from '../entities/User';
 import * as jose from 'jose';
 import config from '../../config';
 export class UserBL {
+  public static async getAll() {
+    const userRepository = getRepository(User);
+
+    try {
+      return await userRepository.find();
+    } catch (e) {
+      console.log(e);
+      return '';
+    }
+  }
+  public static async getAllWithRoles() {
+    const userRepository = getRepository(User);
+
+    try {
+      return await userRepository.find({
+        relations: ['role'],
+      });
+    } catch (e) {
+      console.log(e);
+      return '';
+    }
+  }
+
   public static async validatePassword(userId: string, password: string) {
     const userRepository = getRepository(User);
 
