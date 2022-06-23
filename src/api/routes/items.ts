@@ -48,22 +48,6 @@ route.delete('/:itemId', async (req, res) => {
 	}
 });
 
-route.delete('/usage/:itemId', async (req, res) => {
-	try {
-		const itemToDeleteId = req.params.itemId;
-
-		// TODO: add validations
-
-		await ItemsBL.deleteUsage(itemToDeleteId);
-
-		console.log(`usage ${itemToDeleteId} ended`);
-		res.status(200).end();
-	} catch (e) {
-		console.log(e);
-		res.status(500).end();
-	}
-});
-
 route.post('/', async (req, res) => {
 	try {
 		const name = req.body.name;
