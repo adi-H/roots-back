@@ -1,3 +1,4 @@
+import { User } from './../entities/User';
 import { getRepository, In, IsNull } from 'typeorm';
 import { Unit } from '../entities/Unit';
 export class UnitBL {
@@ -33,13 +34,15 @@ export class UnitBL {
 		});
 	}
 
-	public static async getAllUsersInCompany(companyId: number): Promise<Unit[]> {
+	public static async getAllUsersInCompany(companyId: number): Promise<User[]> {
 		const unitRepository = getRepository(Unit);
 
 		const allTeamsInCompany: number[] = (await unitRepository.find({ where: { parent: companyId } })).map(
 			(unit) => unit.id
 		);
 
-		return await unitRepository.find({ where: { id: In(allTeamsInCompany) } });
+		const userRepository = getRepository(User);
+
+		return await userRepository.find({ where: { teamId: In(allTeamsInCompany) } });
 	}
 }
