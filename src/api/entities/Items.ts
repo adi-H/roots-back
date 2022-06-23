@@ -7,9 +7,7 @@ export class Items {
 
 	@Column() name: string;
 
-	@Column() inUseQuantity: number;
-
-	@Column() readyToUseQuantity: number;
+	@Column() totalQuantity: number;
 
 	@Column() unUseableQuantity: number;
 
@@ -19,19 +17,6 @@ export class Items {
 	@ManyToOne((type) => Unit, (unit) => unit.id)
 	@JoinColumn({ name: 'owner_id', referencedColumnName: 'id' })
 	owner: Unit;
-
-	@ManyToOne((type) => Unit, (unit) => unit.id)
-	@JoinColumn({ name: 'used_by', referencedColumnName: 'id' })
-	usedBy: Unit;
-
-	@Column({
-		name: 'started_use_at',
-		type: 'timestamp without time zone',
-		nullable: true
-	})
-	startedUseAt?: Date;
-
-	public constructor(data?: Items) {}
 }
 
-export type CreateItem = Pick<Items, 'name' | 'owner' | 'unUseableQuantity' | 'readyToUseQuantity' | 'description'>;
+export type CreateItem = Pick<Items, 'name' | 'owner' | 'unUseableQuantity' | 'totalQuantity' | 'description'>;
