@@ -65,17 +65,19 @@ route.delete('/usage/:itemId', async (req, res) => {
   }
 });
 
-route.put('/create', async (req, res) => {
+route.post('/', async (req, res) => {
   try {
     const name = req.body.name;
-    const quantity = req.body.quantity;
-    const ownerId = req.body.owner;
+    const unUseableQuantity = req.body.unUseableQuantity;
+    const readyToUseQuantity = req.body.readyToUseQuantity;
+    const description = req.body.description;
+    const ownerId = req.body.ownerId;
 
     // TODO: add validations
 
-    const createdItem = await ItemsBL.create(name, quantity, ownerId);
+    const createdItem = await ItemsBL.create({ name, unUseableQuantity, readyToUseQuantity, owner: ownerId, description });
 
-    console.log(`created ${quantity} of item ${name} in inventory ${ownerId}`);
+    console.log(`created of item ${name} in inventory ${ownerId}`);
     res.json(createdItem).end();
   } catch (e) {
     console.log(e);

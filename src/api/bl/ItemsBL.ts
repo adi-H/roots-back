@@ -1,6 +1,7 @@
 import { getRepository } from 'typeorm';
-import { Items } from '../entities/Items';
+import { CreateItem, Items } from '../entities/Items';
 import { Unit } from '../entities/Unit';
+
 
 export class ItemsBL {
   /**
@@ -40,7 +41,7 @@ export class ItemsBL {
       const unit = await getRepository(Unit).findOne(usedBy);
       await itemsRepository.update(
         { id },
-        { quantity: currentItem.quantity - quantity }
+        { readyToUseQuantity: currentItem.readyToUseQuantity - quantity }
       );
       await itemsRepository.save({
         name: currentItem.name,
@@ -80,7 +81,7 @@ export class ItemsBL {
 
       await itemsRepository.update(
         { id: itemToDelete.id },
-        { quantity: a.quantity + itemToDelete.quantity }
+        { readyToUseQuantity: a.quantity + itemToDelete.readyToUseQuantity }
       );
       await itemsRepository.delete({ id: a.id });
     } catch (e) {
@@ -96,19 +97,21 @@ export class ItemsBL {
    * @param quantity The total quantity
    * @param ownerId Which company's inventory does the item belong to
    */
-  public static async create(name: string, quantity: number, ownerId: string) {
+
+  public static async create(item: CreateItem) {
     const itemsRepository = getRepository(Items);
 
     try {
-      const owner = await getRepository(Unit).findOne(ownerId);
-      const foundItem = await itemsRepository.findOne({ name });
+      const owner = await getRepository(Unit).findOne(item.owner);
+      const foundItem = await itemsRepository.findOne({ name: item.name });
       if (!!foundItem) {
-        foundItem.quantity += quantity;
+        foundItem.readyToUseQuantity += item.readyToUseQuantity;
+        foundItem.unUseableQuantity += item.unUseableQuantity;
         return await itemsRepository.save(foundItem);
       } else {
         return await itemsRepository.save({
-          name,
-          quantity,
+          ...item,
+          inUseQuantity: 0,
           owner,
           usedBy: owner,
         });
