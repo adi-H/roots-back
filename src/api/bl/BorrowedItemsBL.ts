@@ -1,8 +1,5 @@
-import { BorrowedItems } from './../entities/BorrowedItems';
+import { BorrowedItem, CreateBorrowedItem } from './../entities/BorrowedItems';
 import { getRepository } from 'typeorm';
-import { BorrowedItems } from '../entities/BorrowedItems';
-import { CreateItem, Items } from '../entities/Items';
-import { Unit } from '../entities/Unit';
 
 export class BorrowedItemsBL {
 	/**
@@ -10,8 +7,8 @@ export class BorrowedItemsBL {
    * @param itemId The id of the owner company
    * @returns An array of the items owned by the company
    */
-	public static async getBorrowedItems(itemId: number): Promise<BorrowedItems[]> {
-		const borrowedItemsRepository = getRepository(BorrowedItems);
+	public static async getBorrowedItems(itemId: number): Promise<BorrowedItem[]> {
+		const borrowedItemsRepository = getRepository(BorrowedItem);
 
 		return await borrowedItemsRepository.find({
 			where: [ { item_id: itemId } ]
@@ -23,8 +20,8 @@ export class BorrowedItemsBL {
    *
    * @param BorrowedItem borrowedItem
    */
-	public static async borrowItem(borrowItem: BorrowedItems): Promise<void> {
-		const borrowedItemsRepository = getRepository(BorrowedItems);
+	public static async borrowItem(borrowItem: CreateBorrowedItem): Promise<void> {
+		const borrowedItemsRepository = getRepository(BorrowedItem);
 
 		try {
 			await borrowedItemsRepository.save(borrowItem);

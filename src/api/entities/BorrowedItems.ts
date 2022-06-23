@@ -2,10 +2,10 @@ import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, PrimaryC
 import { Unit } from './Unit';
 
 @Entity('borrowed_items')
-export class BorrowedItems {
+export class BorrowedItem {
 	@PrimaryGeneratedColumn() id: string;
 
-	@Column() item_id: string;
+	@Column() itemId: string;
 
 	@Column() description: string;
 
@@ -13,3 +13,4 @@ export class BorrowedItems {
 
 	@Column() usedBy: number;
 }
+export type CreateBorrowedItem = Omit<BorrowedItem, 'id'>;

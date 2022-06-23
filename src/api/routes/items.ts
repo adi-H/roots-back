@@ -1,3 +1,4 @@
+import { BorrowedItemsBL } from './../bl/BorrowedItemsBL';
 import { Router } from 'express';
 import { ItemsBL } from '../bl/ItemsBL';
 
@@ -23,7 +24,7 @@ route.post('/borrow', async (req, res) => {
 
 		// TODO: add validations
 
-		await ItemsBL.useItem(itemId, usedBy, quantity, description);
+		await BorrowedItemsBL.borrowItem({ itemId, usedBy, quantity, description });
 
 		console.log(`${usedBy} used ${quantity} of item ${itemId} with the description ${description}`);
 		res.status(200).end();
