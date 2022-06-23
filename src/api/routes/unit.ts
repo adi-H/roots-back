@@ -40,7 +40,7 @@ route.get('/allCadetsInCompany', async (req, res) => {
 	}
 });
 
-route.get('/allUserInCompany/:companyId', async (req, res) => {
+route.get('/allUsersInCompany/:companyId', async (req, res) => {
 	try {
 		const companyId: number = parseInt(req.params.companyId);
 		const users = await UnitBL.getAllUsersInCompany(companyId);
