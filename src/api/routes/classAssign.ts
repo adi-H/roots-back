@@ -44,7 +44,7 @@ route.get(
 
 route.get(
   '/requests/user',
-  authorizationCheck([Roles.KAHAD_PLUGA]),
+  authorizationCheck([Roles.KAHAD_PLUGA, Roles.KAHAD_TZEVET]),
   async (req, res) => {
     const currentUser = req.currentUser;
 

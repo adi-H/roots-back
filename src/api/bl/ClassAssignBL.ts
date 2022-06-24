@@ -4,6 +4,7 @@ import { Class } from '../entities/Class';
 import { ClassAssign } from '../entities/ClassAssign';
 import { Unit } from '../entities/Unit';
 import { User } from '../entities/User';
+import AuthorityChecks from '../middlewares/AuthorityChecks';
 export class ClassAssignBL {
   public static async getWeekSchedule(date: Date) {
     const classAssignRepository = getRepository(ClassAssign);
@@ -70,17 +71,16 @@ export class ClassAssignBL {
         assignedClassId,
         { relations: ['owner'] }
       );
-      const isUserOwningClass = this.doesUserOwnClass(
-        assignedClass,
-        creatingUser
-      );
+      const skipApproval =
+        AuthorityChecks.canSkipApproval(creatingUser) &&
+        this.samePluga(assignedClass, creatingUser);
 
       return await classAssignRepository.save({
         title: eventName,
         startDate,
         endDate,
         createdBy: { id: creatingUser.id },
-        isApproved: isUserOwningClass,
+        isApproved: skipApproval,
         assignedClass: { id: assignedClassId },
       });
     } catch (e) {
@@ -89,8 +89,9 @@ export class ClassAssignBL {
     }
   }
 
-  private static doesUserOwnClass(assignedClass: Class, user: User) {
+  private static samePluga(assignedClass: Class, user: User) {
     let usersUnit = user.team;
+
     while (!!usersUnit) {
       if (usersUnit.id === assignedClass.owner.id) {
         return true;
@@ -132,6 +133,10 @@ export class ClassAssignBL {
     const userRequests = await classAssignRepository
       .createQueryBuilder('classAssign')
       .select([
+        'class.id AS "classId"',
+        'class.name AS "className"',
+        'pluga.name AS "classPlugaName"',
+        'gdud.name AS "classGdudName"',
         '"approvingUser"."first_name" AS "firstName"',
         '"approvingUser"."last_name" AS "lastName"',
         '"approvingUser"."phone_number" AS "phoneNumber"',
@@ -152,14 +157,13 @@ export class ClassAssignBL {
             .from(User, 'user')
             .leftJoin('user.team', 'team')
             .leftJoin('team.parent', 'pluga')
-            .where('user.role = :adminId OR user.role = :kahadPlugaId'),
+            .where('user.role = :kahadPlugaId'),
         'approvingUser',
         '"approvingUser"."pluga_id" = pluga.id'
       )
       .where('classAssign.isApproved = :isApproved')
       .setParameter('userId', user.id)
       .setParameter('kahadPlugaId', Roles.KAHAD_PLUGA.valueOf())
-      .setParameter('adminId', Roles.ADMINISTRATOR.valueOf())
       .setParameter('isApproved', false)
       .getRawMany();
 
@@ -170,7 +174,9 @@ export class ClassAssignBL {
       firstName,
       lastName,
       phoneNumber,
-      ...userRequest
+      className,
+      classPlugaName,
+      classGdudName,
     } of userRequests) {
       const approvingUser = {
         firstName,
@@ -183,9 +189,9 @@ export class ClassAssignBL {
       } else {
         classAssigns[classId] = {
           classId,
-          className: userRequest.class_name,
-          classPlugaName: userRequest.pluga_name,
-          classGdudName: userRequest.gdud_name,
+          className,
+          classPlugaName,
+          classGdudName,
           approvingUsers: [approvingUser],
         };
       }
