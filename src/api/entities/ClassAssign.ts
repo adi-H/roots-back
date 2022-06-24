@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Exclusion,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -29,6 +30,8 @@ export class ClassAssign {
   @ManyToOne((type) => User, (user) => user.id)
   @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
   createdBy: User;
+
+  approvingUsers?: User[];
 
   @Column()
   isApproved: boolean;

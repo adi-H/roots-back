@@ -20,7 +20,8 @@ export const authenticationCheck = async (
 
 export const authorizationCheck = (roles: Roles[]) => {
   const roleIds = [...roles, Roles.ADMINISTRATOR].map((role) => role.valueOf());
-  return async (req: Request, res: Response, next: NextFunction) => {
+
+  return (req: Request, res: Response, next: NextFunction) => {
     const user = req.currentUser;
 
     if (user && roleIds.includes(user.role.id)) {

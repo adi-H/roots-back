@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import { Roles } from '../../enums/Roles';
 import { ClassAssignBL } from '../bl/ClassAssignBL';
-import { ClassAssign } from '../entities/ClassAssign';
 import { authorizationCheck } from '../middlewares/AuthorityChecks';
 
 const route = Router();
@@ -30,19 +29,27 @@ route.get('/day/:date', async (req, res) => {
 
 route.get(
   '/requests',
-  authorizationCheck([Roles.KAHAD_GDUD, Roles.KAHAD_PLUGA]),
+  authorizationCheck([Roles.KAHAD_PLUGA]),
   async (req, res) => {
     const currentUser = req.currentUser;
-    let requests: ClassAssign[];
 
     try {
-      if (currentUser.role.id == Roles.KAHAD_GDUD.valueOf()) {
-        requests = await ClassAssignBL.getGdudRequests(currentUser.team);
-      } else {
-        requests = await ClassAssignBL.getPlugaRequests(currentUser.team);
-      }
+      res.json(await ClassAssignBL.getRequests(currentUser.team)).end();
+    } catch (e) {
+      console.log(e);
+      res.status(500).end();
+    }
+  }
+);
 
-      res.json(requests).end();
+route.get(
+  '/requests/user',
+  authorizationCheck([Roles.KAHAD_PLUGA]),
+  async (req, res) => {
+    const currentUser = req.currentUser;
+
+    try {
+      res.json(await ClassAssignBL.getUserRequests(currentUser)).end();
     } catch (e) {
       console.log(e);
       res.status(500).end();
@@ -77,7 +84,7 @@ route.post('/', async (req, res) => {
 
 route.post(
   '/accept',
-  authorizationCheck([Roles.KAHAD_GDUD, Roles.KAHAD_PLUGA]),
+  authorizationCheck([Roles.KAHAD_PLUGA, Roles.KAHAD_TZEVET]),
   async (req, res) => {
     try {
       await ClassAssignBL.accept(req.body.classAssignId);
@@ -91,7 +98,7 @@ route.post(
 
 route.post(
   '/reject',
-  authorizationCheck([Roles.KAHAD_GDUD, Roles.KAHAD_PLUGA]),
+  authorizationCheck([Roles.KAHAD_PLUGA, Roles.KAHAD_TZEVET]),
   async (req, res) => {
     try {
       await ClassAssignBL.reject(req.body.classAssignId);
