@@ -1,9 +1,11 @@
 import { Router } from 'express';
+import { Roles } from '../../enums/Roles';
 import { UserBL } from '../bl/UserBL';
+import { authorizationCheck } from '../middlewares/AuthorityChecks';
 
 const route = Router();
 
-route.put('/updateRole', async (req, res) => {
+route.put('/updateRole', authorizationCheck([Roles.SAMP]), async (req, res) => {
   const userId = req.body.userId;
   const roleId = req.body.roleId;
 

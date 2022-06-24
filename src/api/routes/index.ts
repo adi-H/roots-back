@@ -14,23 +14,29 @@ import inquiry from './inquiry';
 import health from './health';
 import role from './role';
 import quiz from './quiz';
+import { authenticationCheck } from '../middlewares/AuthorityChecks';
+import { PathParams } from 'express-serve-static-core';
 
 const routes = Router();
 
+function authorizedRoute(route: PathParams, router: Router) {
+  routes.use(route, authenticationCheck, router);
+}
+
 routes.use('/auth', auth);
-routes.use('/user', user);
-routes.use('/building', building);
-routes.use('/class', classes);
-routes.use('/classAssign', classAssigns);
-routes.use('/unit', unit);
-routes.use('/url', url);
-routes.use('/items', items);
-routes.use('/classType', classType);
-routes.use('/attendance', attendance);
-routes.use('/recipient', recipient);
-routes.use('/inquiry', inquiry);
 routes.use('/health', health);
-routes.use('/role', role);
-routes.use('/quiz', quiz);
+authorizedRoute('/user', user);
+authorizedRoute('/building', building);
+authorizedRoute('/class', classes);
+authorizedRoute('/classAssign', classAssigns);
+authorizedRoute('/unit', unit);
+authorizedRoute('/url', url);
+authorizedRoute('/items', items);
+authorizedRoute('/classType', classType);
+authorizedRoute('/attendance', attendance);
+authorizedRoute('/recipient', recipient);
+authorizedRoute('/inquiry', inquiry);
+authorizedRoute('/role', role);
+authorizedRoute('/quiz', quiz);
 
 export default routes;

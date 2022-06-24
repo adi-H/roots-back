@@ -39,7 +39,6 @@ route.post('/sign', (req, res) => {
     .getRepository('class')
     .update({ id: classId }, { keyholder: userId, sign_time: new Date() })
     .then((result) => {
-      console.log(result);
       res.status(200).end();
     })
     .catch((err) => {

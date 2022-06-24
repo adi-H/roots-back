@@ -9,7 +9,7 @@ import config from '../config';
 import { ErrorHandler, handleError } from '../helpers/ErrorHandler';
 import Logger from '../logger';
 import cookieParser from 'cookie-parser';
-import { isUserAuthenticated } from '../api/middlewares/middlewares';
+import { authenticationCheck } from '../api/middlewares/AuthorityChecks';
 
 export default (app: Application): void => {
   // Health Check endpoints
@@ -57,8 +57,6 @@ export default (app: Application): void => {
     );
     next();
   });
-
-  app.use(isUserAuthenticated);
 
   /// Error handlers
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
