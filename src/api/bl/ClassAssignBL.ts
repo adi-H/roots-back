@@ -103,7 +103,7 @@ export class ClassAssignBL {
     return false;
   }
 
-  public static async getRequests(team: Unit) {
+  public static async getOpenRequests(team: Unit) {
     const classAssignRepository = getRepository(ClassAssign);
 
     return await classAssignRepository
@@ -112,10 +112,14 @@ export class ClassAssignBL {
       .leftJoinAndSelect('classAssign.assignedClass', 'class')
       .leftJoinAndSelect('classAssign.createdBy', 'creatingUser')
       .leftJoinAndSelect('class.owner', 'owner')
-      .where('owner.id = :plugaId AND classAssign.isApproved = :isApproved', {
-        plugaId: team.parent.id,
-        isApproved: false,
-      })
+      .where(
+        'owner.id = :plugaId AND classAssign.isApproved = :isApproved AND classAssign.isDenied = :isDenied',
+        {
+          plugaId: team.parent.id,
+          isApproved: false,
+          isDenied: false,
+        }
+      )
       .getMany();
   }
 
@@ -209,6 +213,6 @@ export class ClassAssignBL {
   public static async reject(classAssignId: number) {
     const classAssignRepository = getRepository(ClassAssign);
 
-    classAssignRepository.delete(classAssignId);
+    classAssignRepository.update(classAssignId, { isDenied: true });
   }
 }

@@ -7,11 +7,17 @@ export class UserBL {
     const userRepository = getRepository(User);
 
     try {
-      const userToValidate = await userRepository.findOne(userId, {
-        relations: ['team', 'role', 'team.parent', 'team.parent.parent'],
-      });
+      const userToValidate = await userRepository
+        .createQueryBuilder('user')
+        .addSelect('user.password')
+        .innerJoinAndSelect('user.team', 'team')
+        .innerJoinAndSelect('user.role', 'role')
+        .innerJoinAndSelect('team.parent', 'pluga')
+        .innerJoinAndSelect('pluga.parent', 'gdud')
+        .where('user.id = :userId', { userId })
+        .getOne();
 
-      if (userToValidate.password === password) {
+      if (userToValidate && userToValidate.password === password) {
         delete userToValidate.password;
         const jwt = await new jose.SignJWT({ ...userToValidate })
           .setProtectedHeader({ alg: 'RS256' })
@@ -20,7 +26,7 @@ export class UserBL {
 
         return jwt;
       } else {
-        throw new Error();
+        return '';
       }
     } catch (e) {
       console.log(e);

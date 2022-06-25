@@ -31,6 +31,9 @@ export class ClassAssign {
   @JoinColumn({ name: 'created_by', referencedColumnName: 'id' })
   createdBy: User;
 
-  @Column()
+  @Column({ default: false })
   isApproved: boolean;
+
+  @Column({ default: false })
+  isDenied: boolean;
 }

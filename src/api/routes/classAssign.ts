@@ -34,7 +34,7 @@ route.get(
     const currentUser = req.currentUser;
 
     try {
-      res.json(await ClassAssignBL.getRequests(currentUser.team)).end();
+      res.json(await ClassAssignBL.getOpenRequests(currentUser.team)).end();
     } catch (e) {
       console.log(e);
       res.status(500).end();
