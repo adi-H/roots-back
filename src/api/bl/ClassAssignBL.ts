@@ -1,8 +1,10 @@
+import { Roles } from './../../enums/Roles';
 import { Between, getRepository, MoreThan } from 'typeorm';
 import { Class } from '../entities/Class';
 import { ClassAssign } from '../entities/ClassAssign';
 import { Unit } from '../entities/Unit';
 import { User } from '../entities/User';
+import AuthorityChecks from '../middlewares/AuthorityChecks';
 export class ClassAssignBL {
   public static async getWeekSchedule(date: Date) {
     const classAssignRepository = getRepository(ClassAssign);
@@ -69,17 +71,16 @@ export class ClassAssignBL {
         assignedClassId,
         { relations: ['owner'] }
       );
-      const isUserOwningClass = this.doesUserOwnClass(
-        assignedClass,
-        creatingUser
-      );
+      const skipApproval =
+        AuthorityChecks.canSkipApproval(creatingUser) &&
+        this.samePluga(assignedClass, creatingUser);
 
       return await classAssignRepository.save({
         title: eventName,
         startDate,
         endDate,
         createdBy: { id: creatingUser.id },
-        isApproved: isUserOwningClass,
+        isApproved: skipApproval,
         assignedClass: { id: assignedClassId },
       });
     } catch (e) {
@@ -88,8 +89,9 @@ export class ClassAssignBL {
     }
   }
 
-  private static doesUserOwnClass(assignedClass: Class, user: User) {
+  private static samePluga(assignedClass: Class, user: User) {
     let usersUnit = user.team;
+
     while (!!usersUnit) {
       if (usersUnit.id === assignedClass.owner.id) {
         return true;
@@ -101,7 +103,7 @@ export class ClassAssignBL {
     return false;
   }
 
-  public static async getPlugaRequests(team: Unit) {
+  public static async getOpenRequests(team: Unit) {
     const classAssignRepository = getRepository(ClassAssign);
 
     return await classAssignRepository
@@ -110,39 +112,96 @@ export class ClassAssignBL {
       .leftJoinAndSelect('classAssign.assignedClass', 'class')
       .leftJoinAndSelect('classAssign.createdBy', 'creatingUser')
       .leftJoinAndSelect('class.owner', 'owner')
-      .where('owner.id = :plugaId AND classAssign.isApproved = :isApproved', {
-        plugaId: team.parent.id,
-        isApproved: false,
-      })
+      .where(
+        'owner.id = :plugaId AND classAssign.isApproved = :isApproved AND classAssign.isDenied = :isDenied',
+        {
+          plugaId: team.parent.id,
+          isApproved: false,
+          isDenied: false,
+        }
+      )
       .getMany();
   }
 
-  public static async getGdudRequests(team: Unit) {
+  public static async getUserRequests(user: User) {
     const classAssignRepository = getRepository(ClassAssign);
 
-    const qb = classAssignRepository.createQueryBuilder('classAssign');
+    type UserRequest = {
+      classId: number;
+      className: string;
+      classPlugaName: string;
+      classGdudName: string;
+      approvingUsers: Partial<User>[];
+    };
 
-    return await qb
-      .select()
+    const userRequests = await classAssignRepository
+      .createQueryBuilder('classAssign')
+      .select([
+        'class.id AS "classId"',
+        'class.name AS "className"',
+        'pluga.name AS "classPlugaName"',
+        'gdud.name AS "classGdudName"',
+        '"approvingUser"."first_name" AS "firstName"',
+        '"approvingUser"."last_name" AS "lastName"',
+        '"approvingUser"."phone_number" AS "phoneNumber"',
+      ])
       .leftJoinAndSelect('classAssign.assignedClass', 'class')
-      .leftJoinAndSelect('classAssign.createdBy', 'creatingUser')
-      .leftJoinAndSelect('class.owner', 'owner')
-      .where('classAssign.isApproved = :isApproved', {
-        isApproved: false,
-      })
-      .andWhere((qb) => {
-        const subQuery = qb
-          .subQuery()
-          .select('unit.id')
-          .from(Unit, 'unit')
-          .leftJoin('unit.parent', 'parentUnit')
-          .where('parentUnit.id = :gdudId')
-          .getQuery();
+      .leftJoinAndSelect('class.owner', 'pluga')
+      .leftJoinAndSelect('pluga.parent', 'gdud')
+      .innerJoin(
+        'classAssign.createdBy',
+        'creatingUser',
+        'creatingUser.id = :userId'
+      )
+      .innerJoin(
+        (qb) =>
+          qb
+            .subQuery()
+            .select(['"user".*', 'pluga.id as "pluga_id"'])
+            .from(User, 'user')
+            .leftJoin('user.team', 'team')
+            .leftJoin('team.parent', 'pluga')
+            .where('user.role = :kahadPlugaId'),
+        'approvingUser',
+        '"approvingUser"."pluga_id" = pluga.id'
+      )
+      .where('classAssign.isApproved = :isApproved')
+      .setParameter('userId', user.id)
+      .setParameter('kahadPlugaId', Roles.KAHAD_PLUGA.valueOf())
+      .setParameter('isApproved', false)
+      .getRawMany();
 
-        return 'owner.id IN ' + subQuery;
-      })
-      .setParameter('gdudId', team.parent.parent.id)
-      .getMany();
+    const classAssigns: { [key: string]: UserRequest } = {};
+
+    for (const {
+      class_id: classId,
+      firstName,
+      lastName,
+      phoneNumber,
+      className,
+      classPlugaName,
+      classGdudName,
+    } of userRequests) {
+      const approvingUser = {
+        firstName,
+        lastName,
+        phoneNumber,
+      };
+
+      if (classId in classAssigns) {
+        classAssigns[classId].approvingUsers.push(approvingUser);
+      } else {
+        classAssigns[classId] = {
+          classId,
+          className,
+          classPlugaName,
+          classGdudName,
+          approvingUsers: [approvingUser],
+        };
+      }
+    }
+
+    return Object.values(classAssigns);
   }
 
   public static async accept(classAssignId: number) {
@@ -154,6 +213,6 @@ export class ClassAssignBL {
   public static async reject(classAssignId: number) {
     const classAssignRepository = getRepository(ClassAssign);
 
-    classAssignRepository.delete(classAssignId);
+    classAssignRepository.update(classAssignId, { isDenied: true });
   }
 }

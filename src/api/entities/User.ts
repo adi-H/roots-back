@@ -14,7 +14,7 @@ export class User {
   @PrimaryColumn()
   id: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
   @Column()

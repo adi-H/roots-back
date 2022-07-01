@@ -9,7 +9,7 @@ import config from '../config';
 import { ErrorHandler, handleError } from '../helpers/ErrorHandler';
 import Logger from '../logger';
 import cookieParser from 'cookie-parser';
-import { isUserAuthenticated } from '../api/middlewares/middlewares';
+import { authenticationCheck } from '../api/middlewares/AuthorityChecks';
 
 export default (app: Application): void => {
   // Health Check endpoints
@@ -30,8 +30,8 @@ export default (app: Application): void => {
   app.use(cookieParser());
 
   const whitelist = [
-    'http://localhost',
-    'http://127.0.0.1',
+    'http://localhost:3000',
+    'http://127.0.0.1:3000',
     'http://20.82.37.12',
     'http://bhd1roots.com',
   ];
@@ -57,8 +57,6 @@ export default (app: Application): void => {
     );
     next();
   });
-
-  app.use(isUserAuthenticated);
 
   /// Error handlers
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {

@@ -1,7 +1,7 @@
 import { Server, Socket } from 'socket.io';
 import { Unit } from '../entities/Unit';
 import { User } from '../entities/User';
-import { verifyJWT } from '../middlewares/middlewares';
+import { Utilities } from './Utilities';
 
 interface ServerToClientEvents {
   sendCompany: (company: Unit) => void;
@@ -42,7 +42,7 @@ export class SocketConnection {
     this.io.on('connection', (socket) => {
       socket.on('auth', async (jwt) => {
         try {
-          const user = await verifyJWT(jwt);
+          const user = await Utilities.deserializeJWT(jwt);
           this.clients.set(socket.id, user);
           socket.join(user.team.parent.id.toString());
         } catch (e) {

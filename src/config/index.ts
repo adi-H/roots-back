@@ -55,7 +55,7 @@ export default {
   clientHost:
     process.env.NODE_ENV === 'production'
       ? 'http://bhd1roots.com'
-      : ['http://localhost', 'http://127.0.0.1'],
+      : ['http://localhost:3000', 'http://127.0.0.1:3000'],
   port: process.env.PORT || 9000,
   databaseURL:
     process.env.NODE_ENV === 'production'
