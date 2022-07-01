@@ -31,7 +31,6 @@ route.get('/companiesByGdud/:gdudId', async (req, res) => {
 route.get('/allCadetsInCompany', async (req, res) => {
   try {
     const user: User = req.currentUser;
-    console.log(user);
     const companyUnits = await UnitBL.getCompanyTeamsWithCadets(
       user.team.parent.id
     );
