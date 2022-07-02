@@ -1,4 +1,5 @@
 import { getRepository, In, IsNull } from 'typeorm';
+import { Attendance } from '../entities/Attendance';
 import { Unit } from '../entities/Unit';
 export class UnitBL {
   public static async getGdudim() {

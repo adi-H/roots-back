@@ -2,8 +2,10 @@ import { getRepository, In } from 'typeorm';
 import { Attendance } from '../entities/Attendance';
 import { User } from '../entities/User';
 export class AttendanceBL {
-  public static async addAttendances(attendances: Attendance[]) {
+  public static async updateAttendances(attendance: Attendance | Attendance[]) {
     const attendanceRepository = getRepository(Attendance);
+    const attendances: Attendance[] =
+      attendance instanceof Array ? attendance : [attendance];
 
     return await attendanceRepository.save(attendances);
   }
@@ -34,12 +36,5 @@ export class AttendanceBL {
     await attendanceRepository.remove(attendances);
 
     await attendanceRepository.delete({ user: { id: In(attendancesIds) } });
-  }
-
-  public static async delete(id: string) {
-    const attendanceRepository = getRepository(Attendance);
-    const userRepository = getRepository(User);
-
-    attendanceRepository.delete({ user: await userRepository.findOne(id) });
   }
 }

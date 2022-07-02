@@ -34,7 +34,6 @@ route.get('/allCadetsInCompany', async (req, res) => {
     const companyUnits = await UnitBL.getCompanyTeamsWithCadets(
       user.team.parent.id
     );
-
     res.json(companyUnits).end();
   } catch (e) {
     console.log(e);

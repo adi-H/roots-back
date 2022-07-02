@@ -8,7 +8,7 @@ const route = Router();
 route.post('/', async (req, res) => {
   try {
     const attendances = req.body;
-    await AttendanceBL.addAttendances(attendances);
+    await AttendanceBL.updateAttendances(attendances);
 
     try {
       SocketConnection.sendCompany(
@@ -28,24 +28,6 @@ route.get('/clear', async (req, res) => {
   try {
     const userCompanyId = req.currentUser.team.parent.id;
     await AttendanceBL.clearCompany(userCompanyId);
-
-    try {
-      SocketConnection.sendCompany(
-        await UnitBL.getCompanyTeamsWithCadets(req.currentUser.team.parent.id),
-        req.currentUser.team.parent.id
-      );
-    } catch (e) {}
-
-    res.status(200).end();
-  } catch (e) {
-    console.log(e);
-    res.status(500).end();
-  }
-});
-
-route.delete('/:attendanceId', async (req, res) => {
-  try {
-    await AttendanceBL.delete(req.params.attendanceId);
 
     try {
       SocketConnection.sendCompany(
