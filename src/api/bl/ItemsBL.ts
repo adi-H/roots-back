@@ -2,7 +2,6 @@ import { getRepository } from 'typeorm';
 import { CreateItem, Items } from '../entities/Items';
 import { Unit } from '../entities/Unit';
 
-
 export class ItemsBL {
   /**
    * Get all of the items owned by this company
@@ -13,81 +12,9 @@ export class ItemsBL {
     const itemsRepository = getRepository(Items);
 
     return await itemsRepository.find({
-      where: [{ owner: ownerId }, { usedBy: ownerId }],
-      relations: ['owner', 'owner.parent', 'usedBy', 'usedBy.parent'],
+      where: [{ owner: ownerId }],
+      relations: ['owner', 'owner.parent'],
     });
-  }
-
-  /**
-   * Take an item out of the inventory
-   *
-   * @param id The id of item to take out
-   * @param usedBy Which company is using the item
-   * @param quantity The quantity used
-   * @param description Free text description
-   */
-  public static async useItem(
-    id: string,
-    usedBy: string,
-    quantity: number,
-    description: string
-  ): Promise<void> {
-    const itemsRepository = getRepository(Items);
-
-    try {
-      const currentItem = await itemsRepository.findOne(id, {
-        relations: ['owner', 'usedBy'],
-      });
-      const unit = await getRepository(Unit).findOne(usedBy);
-      await itemsRepository.update(
-        { id },
-        { readyToUseQuantity: currentItem.readyToUseQuantity - quantity }
-      );
-      await itemsRepository.save({
-        name: currentItem.name,
-        quantity,
-        owner: currentItem.owner,
-        description,
-        usedBy: unit,
-        startedUseAt: new Date(),
-      });
-    } catch (e) {
-      console.log(e.stack);
-      throw new Error('Could not use items');
-    }
-  }
-
-  /**
-   * Return items that are no longer used to the inventory
-   * @param id The id of the used items (The usage, not the items in the inventory)
-   */
-  public static async deleteUsage(id: string): Promise<void> {
-    const itemsRepository = getRepository(Items);
-
-    try {
-      let a;
-      const itemToDelete = await itemsRepository.findOne(id, {
-        relations: ['owner', 'usedBy'],
-      });
-      const itemsInInventory = await itemsRepository.find({
-        owner: itemToDelete.owner,
-        name: itemToDelete.name,
-      });
-      itemsInInventory.forEach((i) => {
-        if (i.usedBy !== null) {
-          a = i;
-        }
-      });
-
-      await itemsRepository.update(
-        { id: itemToDelete.id },
-        { readyToUseQuantity: a.quantity + itemToDelete.readyToUseQuantity }
-      );
-      await itemsRepository.delete({ id: a.id });
-    } catch (e) {
-      console.log(e.stack);
-      throw new Error('Could not use items');
-    }
   }
 
   /**
@@ -105,13 +32,12 @@ export class ItemsBL {
       const owner = await getRepository(Unit).findOne(item.owner);
       const foundItem = await itemsRepository.findOne({ name: item.name });
       if (!!foundItem) {
-        foundItem.readyToUseQuantity += item.readyToUseQuantity;
+        foundItem.totalQuantity += item.totalQuantity;
         foundItem.unUseableQuantity += item.unUseableQuantity;
         return await itemsRepository.save(foundItem);
       } else {
         return await itemsRepository.save({
           ...item,
-          inUseQuantity: 0,
           owner,
           usedBy: owner,
         });
@@ -119,6 +45,17 @@ export class ItemsBL {
     } catch (e) {
       console.log(e.stack);
       throw new Error('Could not use items');
+    }
+  }
+
+  public static async edit(itemToEdit: any) {
+    const itemsRepository = getRepository(Items);
+
+    try {
+      await itemsRepository.update(itemToEdit.id, itemToEdit);
+    } catch (e) {
+      console.log(e.stack);
+      throw new Error('Could not update item');
     }
   }
 
