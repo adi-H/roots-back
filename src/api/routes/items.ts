@@ -17,16 +17,18 @@ route.get('/owner/:ownerId', async (req, res) => {
 
 route.post('/borrow', async (req, res) => {
 	try {
-		const itemId = req.body.itemId;
-		const usedBy = req.body.usedBy;
-		const quantity = req.body.quantity;
-		const description = req.body.description;
+		const { itemId, user, quantityToBorrow, description } = req.body;
 
 		// TODO: add validations
 
-		await BorrowedItemsBL.borrowItem({ itemId, usedBy, quantity, description });
+		await BorrowedItemsBL.borrowItem({
+			itemId,
+			usedBy: user,
+			quantity: quantityToBorrow,
+			description,
+		});
 
-		console.log(`${usedBy} used ${quantity} of item ${itemId} with the description ${description}`);
+		console.log(`${user} used ${quantityToBorrow} of item ${itemId} with the description ${description}`);
 		res.status(200).end();
 	} catch (e) {
 		console.log(e);
@@ -68,6 +70,18 @@ route.post('/', async (req, res) => {
 
 		console.log(`created of item ${name} in inventory ${ownerId}`);
 		res.json(createdItem).end();
+	} catch (e) {
+		console.log(e);
+		res.status(500).end();
+	}
+});
+
+route.put('/', async (req, res) => {
+	try {
+
+		const updatedItem = await ItemsBL.edit(req.body);
+
+		res.json(updatedItem).end();
 	} catch (e) {
 		console.log(e);
 		res.status(500).end();
