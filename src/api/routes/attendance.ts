@@ -25,7 +25,6 @@ route.post('/', async (req, res) => {
 });
 
 route.put('/team/:teamId/clear', async (req, res) => {
-  console.log('hello');
   const teamId = parseInt(req.params.teamId);
   const userCompanyId = req.currentUser.team.parent.id;
 
