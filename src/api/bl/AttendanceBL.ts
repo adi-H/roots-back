@@ -10,6 +10,31 @@ export class AttendanceBL {
     return await attendanceRepository.save(attendances);
   }
 
+  public static async clearTeam(teamId: number) {
+    const userRepository = getRepository(User);
+    const attendanceRepository = getRepository(Attendance);
+
+    const teamCadetsIds = (
+      await userRepository.find({
+        where: { team: teamId },
+      })
+    ).map((cadet) => cadet.id);
+
+    const attendances = await attendanceRepository.find({
+      where: { userId: In(teamCadetsIds) },
+    });
+
+    this.updateAttendances(
+      attendances.map((attendance) => {
+        attendance.inAttendance = null;
+        attendance.reason = null;
+        return attendance;
+      })
+    );
+
+    console.log(attendances);
+  }
+
   public static async clearCompany(companyId: number) {
     const attendanceRepository = getRepository(Attendance);
 

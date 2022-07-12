@@ -15,7 +15,7 @@ route.post('/', async (req, res) => {
         await UnitBL.getCompanyTeamsWithCadets(req.currentUser.team.parent.id),
         req.currentUser.team.parent.id
       );
-    } catch (e) {}
+    } catch (e) { }
 
     res.status(200).end();
   } catch (e) {
@@ -24,15 +24,18 @@ route.post('/', async (req, res) => {
   }
 });
 
-route.get('/clear', async (req, res) => {
+route.put('/team/:teamId/clear', async (req, res) => {
+  console.log('hello');
+  const teamId = parseInt(req.params.teamId);
+  const userCompanyId = req.currentUser.team.parent.id;
+
   try {
-    const userCompanyId = req.currentUser.team.parent.id;
-    await AttendanceBL.clearCompany(userCompanyId);
+    await AttendanceBL.clearTeam(teamId);
 
     try {
       SocketConnection.sendCompany(
-        await UnitBL.getCompanyTeamsWithCadets(req.currentUser.team.parent.id),
-        req.currentUser.team.parent.id
+        await UnitBL.getCompanyTeamsWithCadets(userCompanyId),
+        userCompanyId
       );
     } catch (e) {}
 
