@@ -8,7 +8,7 @@ const ORMconfig = {
   host: config.databaseURL,
   port: process.env.POSTGRES_PORT ?? 5432,
   username: process.env.POSTGRES_USER ?? 'postgres',
-  password: process.env.POSTGRES_PASSWORD ?? 'admin',
+  password: process.env.POSTGRES_PASSWORD ?? 'postgres',
   database: process.env.POSTGRES_DBNAME ?? 'postgres',
   schema: 'public',
   synchronize: true,

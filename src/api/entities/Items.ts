@@ -3,8 +3,10 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { BorrowedItem } from './BorrowedItems';
 import { Unit } from './Unit';
 
 @Entity('items')
@@ -23,6 +25,9 @@ export class Items {
   @ManyToOne((type) => Unit, (unit) => unit.id)
   @JoinColumn({ name: 'owner_id', referencedColumnName: 'id' })
   owner: Unit;
+
+  @OneToMany((type) => BorrowedItem, (item) => item.item)
+  borrowedByMe: BorrowedItem[];
 }
 
 export type CreateItem = Pick<
