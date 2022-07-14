@@ -62,13 +62,18 @@ route.post('/', async (req, res) => {
 
     // TODO: add validations
 
-    const createdItem = await ItemsBL.create({
+    let createdItem = await ItemsBL.create({
       name,
       unUseableQuantity,
       totalQuantity,
       owner: ownerId,
       description,
     });
+
+    createdItem = {
+      ...createdItem,
+      borrowedByMe: [],
+    };
 
     console.log(`created of item ${name} in inventory ${ownerId}`);
     res.json(createdItem).end();
