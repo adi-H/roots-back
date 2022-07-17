@@ -30,7 +30,6 @@ export default (app: Application): void => {
   app.use(cookieParser());
 
   const whitelist = [
-    'http://localhost',
     'http://localhost:3000',
     'http://127.0.0.1',
     'http://20.82.37.12',

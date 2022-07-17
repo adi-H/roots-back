@@ -1,6 +1,4 @@
-import { NextFunction, Request, Response, Router } from 'express';
-import { Logger } from 'winston';
-import { Container } from 'typedi';
+import { Router } from 'express';
 import { UnitBL } from '../bl/UnitBL';
 import { User } from '../entities/User';
 
@@ -31,10 +29,21 @@ route.get('/companiesByGdud/:gdudId', async (req, res) => {
 route.get('/allCadetsInCompany', async (req, res) => {
   try {
     const user: User = req.currentUser;
-    const companyUnits = await UnitBL.getCompanyTeamsWithCadets(
-      user.team.parent.id
-    );
+    const companyUnits = await UnitBL.getCompanyTeamsWithCadets(user.team.parent.id);
+
     res.json(companyUnits).end();
+  } catch (e) {
+    console.log(e);
+    res.status(500).end();
+  }
+});
+
+route.get('/allUsersInCompany/:companyId', async (req, res) => {
+  try {
+    const companyId: number = parseInt(req.params.companyId);
+    const users = await UnitBL.getAllUsersInCompany(companyId);
+
+    res.json(users).end();
   } catch (e) {
     console.log(e);
     res.status(500).end();
