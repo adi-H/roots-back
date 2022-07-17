@@ -11,9 +11,7 @@ image:
   # tag: dev.3
   tag: ""
 
-imagePullSecrets: 
-  - postgresSqlSS: psql-roots-postgresql
-  - postgresSecretName: postgres-secret
+imagePullSecrets: []
 nameOverride: ""
 fullnameOverride: ""
 

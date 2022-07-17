@@ -37,7 +37,7 @@ spec:
             - name: POSTGRES_USER
               value: postgres
             - name: POSTGRES_HOST
-              value: {{ .Values.imagePullSecrets.postgresSqlSS }}
+              value: "psql-roots-postgresql"
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DBNAME
@@ -46,7 +46,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: PASSWORD
-                  name: {{ .Values.imagePullSecrets.postgresSecretName }}
+                  name: postgres-secret
 
           ports:
             - name: http
