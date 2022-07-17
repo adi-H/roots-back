@@ -25,7 +25,7 @@ export class AttendanceBL {
         where: { userId: In(teamCadetsIds) },
       });
 
-      this.updateAttendances(
+      await this.updateAttendances(
         attendances.map((attendance) => {
           attendance.inAttendance = null;
           attendance.reason = null;
