@@ -46,7 +46,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: PASSWORD
-                    name: {{ .Values.imagePullSecrets.postgresSecretName }}
+                  name: {{ .Values.imagePullSecrets.postgresSecretName }}
 
           ports:
             - name: http
