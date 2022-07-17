@@ -35,19 +35,18 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: POSTGRES_USER
-              value: postgres
+              value: "postgres"
             - name: POSTGRES_HOST
               value: "psql-roots-postgresql"
             - name: POSTGRES_PORT
               value: "5432"
             - name: POSTGRES_DBNAME
-              value: postgres
+              value: "roots"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: PASSWORD
                   name: postgres-secret
-
           ports:
             - name: http
               containerPort: 9000
