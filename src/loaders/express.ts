@@ -31,13 +31,15 @@ export default (app: Application): void => {
 
   const whitelist = [
     'http://localhost:3000',
-    'http://127.0.0.1:3000',
+    'http://127.0.0.1',
+    'http://20.82.37.12',
     'http://bhd1roots.com',
   ];
 
   const corsOptions = {
     origin: function (origin, callback) {
-      if (whitelist.indexOf(origin) !== -1) {
+      // If origin is undefined it means its a same-origin request
+      if (origin === undefined || whitelist.indexOf(origin) !== -1) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
@@ -57,9 +59,6 @@ export default (app: Application): void => {
   });
 
   app.use(isUserAuthenticated);
-
-  // Load API routes
-  app.use(`/${config.endpointPrefix}`, apiRoutes);
 
   /// Error handlers
   app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
@@ -93,4 +92,6 @@ export default (app: Application): void => {
       handleError(err, res);
     }
   );
+  // Load API routes
+  app.use(`/${config.endpointPrefix}`, apiRoutes);
 };
