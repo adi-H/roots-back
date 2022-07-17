@@ -37,9 +37,9 @@ spec:
             - name: http
               containerPort: 9000
               protocol: TCP
-              - name: POSTGRES_USER
-              value: postgres
               env:
+                - name: POSTGRES_USER
+                  value: postgres
                 - name: POSTGRES_HOST
                   value: {{ .Values.imagePullSecrets.postgresSqlSS }}
                 - name: POSTGRES_PORT
