@@ -11,10 +11,12 @@ export class ItemsBL {
   public static async getByOwner(ownerId: string): Promise<Items[]> {
     const itemsRepository = getRepository(Items);
 
-    return await itemsRepository.find({
+    const items = await itemsRepository.find({
       where: [{ owner: ownerId }],
-      relations: ['owner', 'owner.parent'],
+      relations: ['owner', 'owner.parent', 'borrowedByMe'],
     });
+
+    return items;
   }
 
   /**
