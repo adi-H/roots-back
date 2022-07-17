@@ -30,13 +30,10 @@ route.put('/team/:teamId/clear', async (req, res) => {
 
   try {
     await AttendanceBL.clearTeam(teamId);
-
-    try {
-      SocketConnection.sendCompany(
-        await UnitBL.getCompanyTeamsWithCadets(userCompanyId),
-        userCompanyId
-      );
-    } catch (e) {}
+    SocketConnection.sendCompany(
+      await UnitBL.getCompanyTeamsWithCadets(userCompanyId),
+      userCompanyId
+    );
 
     res.status(200).end();
   } catch (e) {

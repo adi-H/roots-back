@@ -1,6 +1,5 @@
 import { User } from './../entities/User';
 import { getRepository, In, IsNull } from 'typeorm';
-import { Attendance } from '../entities/Attendance';
 import { Unit } from '../entities/Unit';
 export class UnitBL {
 	public static async getGdudim() {
@@ -14,7 +13,7 @@ export class UnitBL {
 
 		return await unitRepository.find({
 			where: { parent: IsNull() },
-			relations: [ 'children', 'children.children' ]
+      relations: ['children', 'children.children'],
 		});
 	}
 
@@ -23,7 +22,11 @@ export class UnitBL {
 
 		return await unitRepository.findOne({
 			where: { id: companyId },
-			relations: [ 'children', 'children.teamCadets', 'children.teamCadets.attendance' ]
+      relations: [
+        'children',
+        'children.teamCadets',
+        'children.teamCadets.attendance',
+      ],
 		});
 	}
 
@@ -38,12 +41,14 @@ export class UnitBL {
 	public static async getAllUsersInCompany(companyId: number): Promise<User[]> {
 		const unitRepository = getRepository(Unit);
 
-		const allTeamsInCompany: number[] = (await unitRepository.find({ where: { parent: companyId } })).map(
-			(unit) => unit.id
-		);
+    const allTeamsInCompany: number[] = (
+      await unitRepository.find({ where: { parent: companyId } })
+    ).map((unit) => unit.id);
 
 		const userRepository = getRepository(User);
 
-		return await userRepository.find({ where: { teamId: In(allTeamsInCompany) } });
+    return await userRepository.find({
+      where: { teamId: In(allTeamsInCompany) },
+    });
 	}
 }

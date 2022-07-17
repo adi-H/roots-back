@@ -16,20 +16,22 @@ export class AttendanceBL {
 
     const teamCadetsIds = (
       await userRepository.find({
-        where: { team: teamId },
+        where: { team: { id: teamId } },
       })
     ).map((cadet) => cadet.id);
 
-    const attendances = await attendanceRepository.find({
-      where: { userId: In(teamCadetsIds) },
-    });
+    if (teamCadetsIds.length > 0) {
+      const attendances = await attendanceRepository.find({
+        where: { userId: In(teamCadetsIds) },
+      });
 
-    this.updateAttendances(
-      attendances.map((attendance) => {
-        attendance.inAttendance = null;
-        attendance.reason = null;
-        return attendance;
-      })
-    );
+      this.updateAttendances(
+        attendances.map((attendance) => {
+          attendance.inAttendance = null;
+          attendance.reason = null;
+          return attendance;
+        })
+      );
+    }
   }
 }
