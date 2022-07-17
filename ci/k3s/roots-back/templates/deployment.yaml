@@ -43,10 +43,12 @@ spec:
             - name: POSTGRES_DBNAME
               value: "roots"
             - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  key: PASSWORD
-                  name: postgres-secret
+              value: "postgres"
+            # - name: POSTGRES_PASSWORD
+            #   valueFrom:
+            #     secretKeyRef:
+            #       key: PASSWORD
+            #       name: postgres-secret
           ports:
             - name: http
               containerPort: 9000
