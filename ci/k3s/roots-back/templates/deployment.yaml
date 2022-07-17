@@ -33,24 +33,25 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: POSTGRES_USER
+              value: postgres
+            - name: POSTGRES_HOST
+              value: {{ .Values.imagePullSecrets.postgresSqlSS }}
+            - name: POSTGRES_PORT
+              value: "5432"
+            - name: POSTGRES_DBNAME
+              value: postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: PASSWORD
+                    name: {{ .Values.imagePullSecrets.postgresSecretName }}
+
           ports:
             - name: http
               containerPort: 9000
               protocol: TCP
-              env:
-                - name: POSTGRES_USER
-                  value: postgres
-                - name: POSTGRES_HOST
-                  value: {{ .Values.imagePullSecrets.postgresSqlSS }}
-                - name: POSTGRES_PORT
-                  value: "5432"
-                - name: POSTGRES_DBNAME
-                  value: postgres
-                - name: POSTGRES_PASSWORD
-                  valueFrom:
-                    secretKeyRef:
-                      key: PASSWORD
-                      name: {{ .Values.imagePullSecrets.postgresSecretName }}
           livenessProbe:
                 exec:
                   command:
