@@ -42,3 +42,8 @@ typings/
 .mongodb/
 
 .DS_STORE
+
+# Local orm settings
+ormconfig.ts
+
+package-lock.json

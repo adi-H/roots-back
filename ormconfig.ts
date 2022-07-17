@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import config from './src/config';
-const SnakeNamingStrategy = require('typeorm-naming-strategies')
-  .SnakeNamingStrategy;
+const SnakeNamingStrategy =
+  require('typeorm-naming-strategies').SnakeNamingStrategy;
 
 const ORMconfig = {
   type: 'postgres',

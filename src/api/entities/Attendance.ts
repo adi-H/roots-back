@@ -1,19 +1,23 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryColumn } from 'typeorm';
 import { User } from './User';
 
-// TODO: inAttendance field can be remove,
-// and the purpose of the table would be to indicate which cadets are absent,
-// we don't have a use record where inAttendance is true
 @Entity('attendance')
 export class Attendance {
-  @OneToOne(() => User, (user) => user.id, { primary: true, cascade: true })
+  @OneToOne(() => User, (user) => user.id, {
+    primary: true,
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'user_id' })
   user: User;
 
-  @Column()
+  @PrimaryColumn({ name: 'user_id' })
+  userId: number;
+
+  @Column({ nullable: true })
   reason: string;
 
-  @Column({ name: 'in_attendance' })
+  @Column({ name: 'in_attendance', nullable: true })
   inAttendance: boolean;
 
   public constructor(data?: Attendance) {
