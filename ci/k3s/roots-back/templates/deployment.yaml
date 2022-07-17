@@ -37,6 +37,20 @@ spec:
             - name: http
               containerPort: 9000
               protocol: TCP
+              - name: POSTGRES_USER
+              value: postgres
+              env:
+                - name: POSTGRES_HOST
+                  value: {{ .Values.imagePullSecrets.postgresSqlSS }}
+                - name: POSTGRES_PORT
+                  value: "5432"
+                - name: POSTGRES_DBNAME
+                  value: roots
+                - name: POSTGRES_PASSWORD
+                  valueFrom:
+                    secretKeyRef:
+                      key: PASSWORD
+                      name: {{ .Values.imagePullSecrets.postgresSecretName }}
           livenessProbe:
                 exec:
                   command:
