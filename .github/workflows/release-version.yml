@@ -48,7 +48,7 @@ jobs:
           push: true
           tags: adihaimsohn/roots-back:dev.${{ github.sha }}
           file: Dockerfile.prod
-#          tags: dorsivan/roots-front:dev.${{ github.sha }}
+#          tags: dorsivan/roots-back:dev.${{ github.sha }}
       
       # - name: try to set permissions
       #   run: chown 644 .k3s.yaml

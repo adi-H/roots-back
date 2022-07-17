@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2beta1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "roots-front.fullname" . }}
+  name: {{ include "roots-back.fullname" . }}
   labels:
-    {{- include "roots-front.labels" . | nindent 4 }}
+    {{- include "roots-back.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "roots-front.fullname" . }}
+    name: {{ include "roots-back.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:
