@@ -17,7 +17,7 @@ route.get('/owner/:ownerId', async (req, res) => {
 
 route.post('/borrow', async (req, res) => {
 	try {
-		const { itemId, user, quantityToBorrow, description } = req.body;
+		const { itemId, user, quantityToBorrow, description, borrowDate, returnDate, ownerId, borrowedItemStatus } = req.body;
 
 		// TODO: add validations
 
@@ -26,10 +26,32 @@ route.post('/borrow', async (req, res) => {
 			usedBy: user,
 			quantity: quantityToBorrow,
 			description,
+			borrowDate,
+			returnDate,
+			ownerId,
+			borrowedItemStatus
 		});
 
 		console.log(`${user} used ${quantityToBorrow} of item ${itemId} with the description ${description}`);
 		res.status(200).end();
+	} catch (e) {
+		console.log(e);
+		res.status(500).end();
+	}
+});
+
+route.get(('/borrowedHistory'), async (req, res) => {
+	try {
+		const {ownerId, itemId}  = req.params;
+		let history;
+		if(itemId) {
+			history = await BorrowedItemsBL.getBorrowedHistoryByItem(parseInt(ownerId), parseInt(itemId));
+		}
+		else {
+			history = await BorrowedItemsBL.getBorrowedHistory(parseInt(ownerId));
+		}
+		console.log(`returned history for item ${itemId}`);
+		res.json(history).end();
 	} catch (e) {
 		console.log(e);
 		res.status(500).end();

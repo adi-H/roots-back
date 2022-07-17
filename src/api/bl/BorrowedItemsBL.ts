@@ -17,4 +17,20 @@ export class BorrowedItemsBL {
 			throw new Error('Could not use items');
 		}
 	}
+
+	public static async getBorrowedHistory(userId: number): Promise<BorrowedItem[]> {
+		const borrowedItemsRepository = getRepository(BorrowedItem);
+
+		return await borrowedItemsRepository.find({
+			where: [ { ownerId: userId } ]
+		}); 
+	}
+
+	public static async getBorrowedHistoryByItem(ownerId: number, itemId: number): Promise<BorrowedItem[]> {
+		const borrowedItemsRepository = getRepository(BorrowedItem);
+
+		return await borrowedItemsRepository.find({
+			where: [ { ownerId }, { itemId } ]
+		}); 
+	}
 }
