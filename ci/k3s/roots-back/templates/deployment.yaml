@@ -45,7 +45,7 @@ spec:
                 - name: POSTGRES_PORT
                   value: "5432"
                 - name: POSTGRES_DBNAME
-                  value: roots
+                  value: postgres
                 - name: POSTGRES_PASSWORD
                   valueFrom:
                     secretKeyRef:

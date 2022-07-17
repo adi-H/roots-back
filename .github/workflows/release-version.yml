@@ -46,7 +46,7 @@ jobs:
         uses: docker/build-push-action@v3
         with:
           push: true
-          tags: dorsivan/roots-front:dev.${{ github.sha }}
+          tags: adihaimsohn/roots-back:dev.${{ github.sha }}
           file: Dockerfile.prod
 #          tags: dorsivan/roots-front:dev.${{ github.sha }}
       
