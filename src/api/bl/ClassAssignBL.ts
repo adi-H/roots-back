@@ -103,24 +103,30 @@ export class ClassAssignBL {
     return false;
   }
 
-  public static async getOpenRequests(team: Unit) {
+  public static async getOpenRequests(team: Unit = null) {
     const classAssignRepository = getRepository(ClassAssign);
 
-    return await classAssignRepository
+    const qb = await classAssignRepository
       .createQueryBuilder('classAssign')
       .select()
       .leftJoinAndSelect('classAssign.assignedClass', 'class')
       .leftJoinAndSelect('classAssign.createdBy', 'creatingUser')
       .leftJoinAndSelect('class.owner', 'owner')
       .where(
-        'owner.id = :plugaId AND classAssign.isApproved = :isApproved AND classAssign.isDenied = :isDenied',
+        'classAssign.isApproved = :isApproved AND classAssign.isDenied = :isDenied',
         {
-          plugaId: team.parent.id,
           isApproved: false,
           isDenied: false,
         }
-      )
-      .getMany();
+      );
+
+    if (team !== null) {
+      qb.andWhere('owner.id = :plugaId', {
+        plugaId: team.parent.id,
+      });
+    }
+
+    return qb.getMany();
   }
 
   public static async getUserRequests(user: User) {
@@ -131,6 +137,8 @@ export class ClassAssignBL {
       className: string;
       classPlugaName: string;
       classGdudName: string;
+      isApproved: boolean;
+      isDenied: boolean;
       approvingUsers: Partial<User>[];
     };
 
@@ -141,6 +149,8 @@ export class ClassAssignBL {
         'class.name AS "className"',
         'pluga.name AS "classPlugaName"',
         'gdud.name AS "classGdudName"',
+        'classAssign.isApproved AS "isApproved"',
+        'classAssign.isDenied AS "isDenied"',
         '"approvingUser"."first_name" AS "firstName"',
         '"approvingUser"."last_name" AS "lastName"',
         '"approvingUser"."phone_number" AS "phoneNumber"',
@@ -153,7 +163,7 @@ export class ClassAssignBL {
         'creatingUser',
         'creatingUser.id = :userId'
       )
-      .innerJoin(
+      .leftJoin(
         (qb) =>
           qb
             .subQuery()
@@ -165,39 +175,41 @@ export class ClassAssignBL {
         'approvingUser',
         '"approvingUser"."pluga_id" = pluga.id'
       )
-      .where('classAssign.isApproved = :isApproved')
       .setParameter('userId', user.id)
       .setParameter('kahadPlugaId', Roles.KAHAD_PLUGA.valueOf())
-      .setParameter('isApproved', false)
       .getRawMany();
 
     const classAssigns: { [key: string]: UserRequest } = {};
 
     for (const {
-      class_id: classId,
+      classId,
       firstName,
       lastName,
       phoneNumber,
       className,
       classPlugaName,
       classGdudName,
+      isApproved,
+      isDenied,
     } of userRequests) {
-      const approvingUser = {
-        firstName,
-        lastName,
-        phoneNumber,
-      };
-
-      if (classId in classAssigns) {
-        classAssigns[classId].approvingUsers.push(approvingUser);
-      } else {
+      if (!(classId in classAssigns)) {
         classAssigns[classId] = {
           classId,
           className,
           classPlugaName,
           classGdudName,
-          approvingUsers: [approvingUser],
+          isApproved,
+          isDenied,
+          approvingUsers: [],
         };
+      }
+
+      if (firstName && lastName && phoneNumber) {
+        classAssigns[classId].approvingUsers.push({
+          firstName,
+          lastName,
+          phoneNumber,
+        });
       }
     }
 
